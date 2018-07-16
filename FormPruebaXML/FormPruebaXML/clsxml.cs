@@ -75,7 +75,7 @@ namespace FormPruebaXML
                 //CARGA DEL DOCUMENTO XML
                 XDocument documento = XDocument.Load(ruta);
 
-                //DETECCION DE NODOS (HACE FALTA CONCIONAR)
+                //DETECCION DE NODOS (HACE FALTA CONDIONAR)
                 XElement Comprobante = documento.Element(cfdi.GetName("Comprobante"));
                 XElement Emisor = Comprobante.Element(cfdi.GetName("Emisor"));
                 XElement Receptor = Comprobante.Element(cfdi.GetName("Receptor"));
@@ -103,7 +103,7 @@ namespace FormPruebaXML
                 comp_fecha = Convert.ToDateTime(Comprobante.Attribute("Fecha").Value);
                 comp_formapago = Convert.ToString(Comprobante.Attribute("FormaPago").Value);
                 comp_condpago = Convert.ToString(Comprobante.Attribute("CondicionesDePago").Value);
-                comp_subtotal = Convert.ToString(Comprobante.Attribute("SubTotal").Value);
+                comp_subtotal = Convert.ToString(Comprobante.Attribute("SubTotal").Value;
                 comp_descuento = Convert.ToString(Comprobante.Attribute("Descuento").Value);
                 comp_moneda = Convert.ToString(Comprobante.Attribute("Moneda").Value);
                 comp_total = Convert.ToString(Comprobante.Attribute("Total").Value);
