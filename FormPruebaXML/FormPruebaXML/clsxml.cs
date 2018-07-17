@@ -56,7 +56,7 @@ namespace FormPruebaXML
                 //CARGA DEL DOCUMENTO XML
                 XDocument documento = XDocument.Load(ruta);
 
-                //DETECCION DE NODOS (HACE FALTA CONCIONAR)
+                //DETECCION DE NODOS (HACE FALTA CONDIONAR)
                 XElement Comprobante = documento.Element(cfdi.GetName("Comprobante"));
                     XElement Emisor = Comprobante.Element(cfdi.GetName("Emisor"));
                     XElement Receptor = Comprobante.Element(cfdi.GetName("Receptor"));
