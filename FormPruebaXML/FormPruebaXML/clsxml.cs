@@ -55,6 +55,7 @@ namespace FormPruebaXML
         public string con_descripcion;
         public string con_valorunitario;
         public string con_importe;
+        public string con_descuento;
 
         //VARIABLES GLOBALES PARA NODO cfdi:Traslado (DENTRO DE cfdi:Concepto)
         public string tr_base;
@@ -62,7 +63,6 @@ namespace FormPruebaXML
         public string tr_tipofactor;
         public string tr_tasacuota;
         public string tr_importe;
-        public string tr_descuento;
 
         //VARIABLES GLOBALES PARA NODO cfdi:Retencion (DENTRO DE cfdi:Concepto)
         public string ret_base;
@@ -80,7 +80,6 @@ namespace FormPruebaXML
         public string imp_tr_tipofactor;
         public string imp_tr_tasacuota;
         public string imp_tr_importe;
-        public string imp_tr_descuento;
 
         //VARIABLES GLOBALES PARA NODO cfdi:Retencion (DENTRO DE cfdi:Impuesto)
         public string imp_ret_impuesto;
@@ -92,8 +91,8 @@ namespace FormPruebaXML
 
         public void get_datos(string ruta)
         {
-            try
-            {
+            //try
+            //{
                 //CARGA DEL DOCUMENTO XML
                 XDocument documento = XDocument.Load(ruta);
 
@@ -126,7 +125,7 @@ namespace FormPruebaXML
                 comp_formapago = Convert.ToString(Comprobante.Attribute("FormaPago").Value);
                 comp_condpago = Convert.ToString(Comprobante.Attribute("CondicionesDePago").Value);
                 comp_subtotal = Convert.ToString(Comprobante.Attribute("SubTotal").Value);
-                comp_descuento = Convert.ToString(Comprobante.Attribute("Descuento").Value);
+                //comp_descuento = Convert.ToString(Comprobante.Attribute("Descuento").Value);
                 comp_moneda = Convert.ToString(Comprobante.Attribute("Moneda").Value);
                 comp_total = Convert.ToString(Comprobante.Attribute("Total").Value);
                 comp_tipocomprobante = Convert.ToString(Comprobante.Attribute("TipoDeComprobante").Value);
@@ -148,24 +147,24 @@ namespace FormPruebaXML
                 con_claveunidad = Convert.ToString(Concepto.Attribute("ClaveUnidad").Value);
                 con_cantidad = Convert.ToString(Concepto.Attribute("Cantidad").Value);
                 con_unidad = Convert.ToString(Concepto.Attribute("Unidad").Value);
-                con_noid = Convert.ToString(Concepto.Attribute("NoIdentificacion").Value);
+                //con_noid = Convert.ToString(Concepto.Attribute("NoIdentificacion").Value);
                 con_descripcion = Convert.ToString(Concepto.Attribute("Descripcion").Value);
                 con_valorunitario = Convert.ToString(Concepto.Attribute("ValorUnitario").Value);
                 con_importe = Convert.ToString(Concepto.Attribute("Importe").Value);
+                //con_descuento = Convert.ToString(Concepto.Attribute("Descuento").Value);
 
                 //ELEMENTOS DEL NODO cfdi:Traslado (DENTRO DE cfdi:Concepto)
                 tr_base = Convert.ToString(Con_traslado.Attribute("Base").Value);
-                tr_impuesto = Convert.ToString(Con_traslado.Attribute("impuesto").Value);
+                tr_impuesto = Convert.ToString(Con_traslado.Attribute("Impuesto").Value);
                 tr_tipofactor = Convert.ToString(Con_traslado.Attribute("TipoFactor").Value);
-                tr_tasacuota = Convert.ToString(Con_traslado.Attribute("TasaCuota").Value);
+                tr_tasacuota = Convert.ToString(Con_traslado.Attribute("TasaOCuota").Value);
                 tr_importe = Convert.ToString(Con_traslado.Attribute("Importe").Value);
-                tr_descuento = Convert.ToString(Con_traslado.Attribute("Descuento").Value);
 
                 //ELEMENTOS DEL NODO cfdi:Retencion (DENTRO DE cfdi:Concepto)
                 ret_base = Convert.ToString(Con_retencion.Attribute("Base").Value);
                 ret_impuesto = Convert.ToString(Con_retencion.Attribute("Impuesto").Value);
                 ret_tipofactor = Convert.ToString(Con_retencion.Attribute("TipoFactor").Value);
-                ret_tasacuota = Convert.ToString(Con_retencion.Attribute("TasaCuota").Value);
+                ret_tasacuota = Convert.ToString(Con_retencion.Attribute("TasaOCuota").Value);
                 ret_importe = Convert.ToString(Con_retencion.Attribute("Importe").Value);
 
                 //ELEMENTOS DE NODO cfdi:Impuestos
@@ -175,9 +174,8 @@ namespace FormPruebaXML
                 //ELEMENTOS DEL NODO cfdi:Traslado (DENTRO DE cfdi:Impuestos)
                 imp_tr_impuesto = Convert.ToString(Imp_traslado.Attribute("Impuesto").Value);
                 imp_tr_tipofactor = Convert.ToString(Imp_traslado.Attribute("TipoFactor").Value);
-                imp_tr_tasacuota = Convert.ToString(Imp_traslado.Attribute("TasaCuota").Value);
+                imp_tr_tasacuota = Convert.ToString(Imp_traslado.Attribute("TasaOCuota").Value);
                 imp_tr_importe = Convert.ToString(Imp_traslado.Attribute("Importe").Value);
-                imp_tr_descuento = Convert.ToString(Imp_traslado.Attribute("Descuento").Value);
 
                 //ELEMENTOS DEL NODO cfdi:Retencion (DENTRO DE cfdi:Impuestos)
                 imp_ret_impuesto = Convert.ToString(Imp_retencion.Attribute("Impuesto").Value);
@@ -186,10 +184,10 @@ namespace FormPruebaXML
                 //ELEMENTOS DEL NODO tfd:TimbreFiscalDigital
                 tim_uuid = Convert.ToString(Timbrefiscal.Attribute("UUID").Value);
                 tim_fechatimbrado = Convert.ToDateTime(Timbrefiscal.Attribute("FechaTimbrado").Value);
-            }
-            catch (Exception ex)
-            {
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //}
         }
     }
 }

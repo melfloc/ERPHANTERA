@@ -7,8 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Xml;
-using System.Xml.Linq;
+
 
 namespace FormPruebaXML
 {
@@ -39,6 +38,8 @@ namespace FormPruebaXML
                 textBox7.Text = obj.comp_tipocomprobante;
                 textBox8.Text = obj.comp_serie;
                 textBox9.Text = obj.comp_folio;
+                textBox17.Text = obj.imp_ret_importe;
+                textBox16.Text = obj.imp_ret_impuesto;
             }
             buscar.Dispose();
         }

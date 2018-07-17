@@ -27,3 +27,13 @@ C:\Users\HANTERA\Source\Repos\ERPhonix\FormPruebaXML\FormPruebaXML\obj\Debug\For
 C:\Users\HANTERA\Source\Repos\ERPhonix\FormPruebaXML\FormPruebaXML\obj\Debug\FormPruebaXML.csproj.CoreCompileInputs.cache
 C:\Users\HANTERA\Source\Repos\ERPhonix\FormPruebaXML\FormPruebaXML\obj\Debug\FormPruebaXML.exe
 C:\Users\HANTERA\Source\Repos\ERPhonix\FormPruebaXML\FormPruebaXML\obj\Debug\FormPruebaXML.pdb
+C:\Users\AMill\Source\Repos\ERPhonix\FormPruebaXML\FormPruebaXML\bin\Debug\FormPruebaXML.exe.config
+C:\Users\AMill\Source\Repos\ERPhonix\FormPruebaXML\FormPruebaXML\bin\Debug\FormPruebaXML.exe
+C:\Users\AMill\Source\Repos\ERPhonix\FormPruebaXML\FormPruebaXML\bin\Debug\FormPruebaXML.pdb
+C:\Users\AMill\Source\Repos\ERPhonix\FormPruebaXML\FormPruebaXML\obj\Debug\FormPruebaXML.csprojAssemblyReference.cache
+C:\Users\AMill\Source\Repos\ERPhonix\FormPruebaXML\FormPruebaXML\obj\Debug\FormPruebaXML.Form1.resources
+C:\Users\AMill\Source\Repos\ERPhonix\FormPruebaXML\FormPruebaXML\obj\Debug\FormPruebaXML.Properties.Resources.resources
+C:\Users\AMill\Source\Repos\ERPhonix\FormPruebaXML\FormPruebaXML\obj\Debug\FormPruebaXML.csproj.GenerateResource.cache
+C:\Users\AMill\Source\Repos\ERPhonix\FormPruebaXML\FormPruebaXML\obj\Debug\FormPruebaXML.csproj.CoreCompileInputs.cache
+C:\Users\AMill\Source\Repos\ERPhonix\FormPruebaXML\FormPruebaXML\obj\Debug\FormPruebaXML.exe
+C:\Users\AMill\Source\Repos\ERPhonix\FormPruebaXML\FormPruebaXML\obj\Debug\FormPruebaXML.pdb
