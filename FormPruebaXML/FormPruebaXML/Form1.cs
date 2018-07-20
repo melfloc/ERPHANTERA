@@ -30,7 +30,7 @@ namespace FormPruebaXML
                 clsxml obj = new clsxml();
                 ruta = buscar.FileName;
                 textBox1.Text = ruta;
-                obj.get_datos(ruta);
+                obj.get_data(ruta);
                 textBox2.Text = obj.comp_version;
                 textBox3.Text = obj.rec_rfc;
                 textBox4.Text = obj.rec_nombre;
@@ -38,8 +38,11 @@ namespace FormPruebaXML
                 textBox7.Text = obj.comp_tipocomprobante;
                 textBox8.Text = obj.comp_serie;
                 textBox9.Text = obj.comp_folio;
-                textBox17.Text = obj.imp_ret_importe;
-                textBox16.Text = obj.imp_ret_impuesto;
+                textBox12.Text = obj.con_descripcion;
+                textBox17.Text = obj.imp_ret_isr_importe;
+                textBox16.Text = obj.imp_ret_isr_impuesto;
+                textBox19.Text = obj.imp_ret_iva_importe;
+                textBox18.Text = obj.imp_ret_iva_impuesto;
             }
             buscar.Dispose();
         }
@@ -47,6 +50,12 @@ namespace FormPruebaXML
         private void button3_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Factura añadida a la base de datos;");
+            Close();           
         }
     }
 }

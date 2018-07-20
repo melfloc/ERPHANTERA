@@ -84,8 +84,10 @@ namespace FormPruebaXML
         public string imp_tr_importe;
 
         //VARIABLES GLOBALES PARA NODO cfdi:Retencion (DENTRO DE cfdi:Impuesto)
-        public string imp_ret_impuesto;
-        public string imp_ret_importe;
+        public string imp_ret_iva_impuesto;
+        public string imp_ret_iva_importe;
+        public string imp_ret_isr_impuesto;
+        public string imp_ret_isr_importe;
 
         //VARIABLES GLOBALES PARA NODO Nomina12:Nomina
         public DateTime nom_fechIniPago;
@@ -125,8 +127,8 @@ namespace FormPruebaXML
 
         public void get_data(string ruta)
         {
-            try
-            {
+            //try
+            //{
                 //CARGA DEL DOCUMENTO XML
                 XDocument documento = XDocument.Load(ruta);
 
@@ -140,7 +142,23 @@ namespace FormPruebaXML
                 /**********/XElement Con_traslados = Con_impuestos.Element(cfdi.GetName("Traslados"));
                 /**************/XElement Con_traslado = Con_traslados.Element(cfdi.GetName("Traslado"));
                 /**********/XElement Con_retenciones = Con_impuestos.Element(cfdi.GetName("Retenciones"));
-                /**************/XElement Con_retencion = Con_retenciones.Element(cfdi.GetName("Retencion"));
+                if (Con_retenciones.HasElements == true)
+                {
+                    /**************/XElement Con_retencion = Con_retenciones.Element(cfdi.GetName("Retencion"));
+                    ret_base = Convert.ToString(Con_retencion.Attribute("Base").Value);
+                    ret_impuesto = Convert.ToString(Con_retencion.Attribute("Impuesto").Value);
+                    ret_tipofactor = Convert.ToString(Con_retencion.Attribute("TipoFactor").Value);
+                    ret_tasacuota = Convert.ToString(Con_retencion.Attribute("TasaOCuota").Value);
+                    ret_importe = Convert.ToString(Con_retencion.Attribute("Importe").Value);
+                }
+                else
+                {
+                    ret_base = "0.00";
+                    ret_impuesto = "-";
+                    ret_tipofactor = "-";
+                    ret_tasacuota = "0.00";
+                    ret_importe = "0.00";
+                }
                 /******/XElement Impuestos = Comprobante.Element(cfdi.GetName("Impuestos"));
                 /**********/XElement Imp_retenciones = Impuestos.Element(cfdi.GetName("Retenciones"));
                 /**************/XElement Imp_retencion = Imp_retenciones.Element(cfdi.GetName("Retencion"));
@@ -148,12 +166,16 @@ namespace FormPruebaXML
                 /**************/XElement Imp_traslado = Imp_Traslados.Element(cfdi.GetName("Traslado"));
                 /**/XElement Complemento = Comprobante.Element(cfdi.GetName("Complemento"));
                 /******/XElement Nomina = Complemento.Element(nomina12.GetName("Nomina"));
-                /**********/XElement Nom_emisor = Nomina.Element(nomina12.GetName("Emisor"));
-                /**********/XElement Nom_receptor = Nomina.Element(nomina12.GetName("Receptor"));
-                /**********/XElement Nom_percepciones = Nomina.Element(nomina12.GetName("Percepciones"));
-                /**************/XElement Per_percepcion = Nom_percepciones.Element(nomina12.GetName("Percepcion"));
-                /**********/XElement Nom_deducciones = Nomina.Element(nomina12.GetName("Deducciones"));
-                /**************/XElement Ded_deduccion = Nom_deducciones.Element(nomina12.GetName("Deduccion"));
+                if (Nomina.HasElements == true)
+                {
+                    /**********/XElement Nom_emisor = Nomina.Element(nomina12.GetName("Emisor"));
+                    /**********/XElement Nom_receptor = Nomina.Element(nomina12.GetName("Receptor"));
+                    /**********/XElement Nom_percepciones = Nomina.Element(nomina12.GetName("Percepciones"));
+                    /**************/XElement Per_percepcion = Nom_percepciones.Element(nomina12.GetName("Percepcion"));
+                    /**********/XElement Nom_deducciones = Nomina.Element(nomina12.GetName("Deducciones"));
+                    /**************/XElement Ded_deduccion = Nom_deducciones.Element(nomina12.GetName("Deduccion"));
+                    
+                }
                 /******/XElement Timbrefiscal = Complemento.Element(tfd.GetName("TimbreFiscalDigital"));
 
                 //############################ OBTENCION DE DATOS DE LOS NODOS #####################################
@@ -198,7 +220,10 @@ namespace FormPruebaXML
 
                 //ELEMENTOS DEL NODO cfdi:Receptor
                 rec_rfc = Convert.ToString(Receptor.Attribute("Rfc").Value);
-                rec_nombre = Convert.ToString(Receptor.Attribute("Nombre").Value);
+                if (Receptor.Attribute("Nombre") == null)
+                    rec_nombre = "-";
+                else
+                    rec_nombre = Convert.ToString(Receptor.Attribute("Nombre").Value);
                 rec_usocfdi = Convert.ToString(Receptor.Attribute("UsoCFDI").Value);
 
                 //ELEMENTOS DEL NODO cfdi:Concepto
@@ -213,8 +238,10 @@ namespace FormPruebaXML
                     con_noid = "-";
                 else
                     con_noid = Convert.ToString(Concepto.Attribute("NoIdentificacion").Value);
-                //con_descripcion condicionar para poder detectar tantas partidas tenga el campo concepto y descricion y que el resultado sea de la siguiente manera Descripcion1 * Descricion2 * Descricion(n), se puede manejar con algun for i = 1 to 100 o con un foreach
-                con_descripcion = Convert.ToString(Concepto.Attribute("Descripcion").Value);
+                foreach (XElement con in Conceptos.Elements(cfdi.GetName("Concepto")))
+                {
+                    con_descripcion += Convert.ToString(con.Attribute("Descripcion").Value) + " * ";
+                }
                 con_valorunitario = Convert.ToString(Concepto.Attribute("ValorUnitario").Value);
                 con_importe = Convert.ToString(Concepto.Attribute("Importe").Value);
                 if (Concepto.Attribute("Descuento") == null)
@@ -229,13 +256,6 @@ namespace FormPruebaXML
                 tr_tasacuota = Convert.ToString(Con_traslado.Attribute("TasaOCuota").Value);
                 tr_importe = Convert.ToString(Con_traslado.Attribute("Importe").Value);
 
-                //ELEMENTOS DEL NODO cfdi:Retencion (DENTRO DE cfdi:Concepto)
-                ret_base = Convert.ToString(Con_retencion.Attribute("Base").Value);
-                ret_impuesto = Convert.ToString(Con_retencion.Attribute("Impuesto").Value);
-                ret_tipofactor = Convert.ToString(Con_retencion.Attribute("TipoFactor").Value);
-                ret_tasacuota = Convert.ToString(Con_retencion.Attribute("TasaOCuota").Value);
-                ret_importe = Convert.ToString(Con_retencion.Attribute("Importe").Value);
-
                 //ELEMENTOS DE NODO cfdi:Impuestos
                 imp_totalimpret = Convert.ToString(Impuestos.Attribute("TotalImpuestosRetenidos").Value);
                 imp_totalimptras = Convert.ToString(Impuestos.Attribute("TotalImpuestosTrasladados").Value);
@@ -247,8 +267,27 @@ namespace FormPruebaXML
                 imp_tr_importe = Convert.ToString(Imp_traslado.Attribute("Importe").Value);
 
                 //ELEMENTOS DEL NODO cfdi:Retencion (DENTRO DE cfdi:Impuestos) // REALIZAR CONDICION DONDE SE VERIFIQUE EL ATRIBUTO "IMPUESTO" Y DEVUELVA EL VALOR DEL ATRIBUTO "IMPORTE"
-                imp_ret_impuesto = Convert.ToString(Imp_retencion.Attribute("Impuesto").Value);
-                imp_ret_importe = Convert.ToString(Imp_retencion.Attribute("Importe").Value);
+                foreach (XElement ret in Imp_retenciones.Elements(cfdi.GetName("Retencion")))
+                {
+                    switch (Convert.ToString(ret.Attribute("Impuesto").Value))
+                    {
+                        case "001":
+                            imp_ret_isr_impuesto = Convert.ToString(ret.Attribute("Impuesto").Value);
+                            imp_ret_isr_importe = Convert.ToString(ret.Attribute("Importe").Value);
+                            break;
+                        case "002":
+                            imp_ret_iva_impuesto = Convert.ToString(ret.Attribute("Impuesto").Value);
+                            imp_ret_iva_importe = Convert.ToString(ret.Attribute("Importe").Value);
+                            break;
+                        default:
+                            imp_ret_isr_impuesto = "-";
+                            imp_ret_isr_importe = "0.00";
+                            imp_ret_iva_impuesto = "-";
+                            imp_ret_iva_importe = "0.00";
+                            break;
+                    }
+                }
+                
 
                 #region nomina
                 //ELEMNTOS DEL NODO Nomina12:Nomina
@@ -258,10 +297,36 @@ namespace FormPruebaXML
                 //ELEMENTOS DEL NODO tfd:TimbreFiscalDigital
                 tim_uuid = Convert.ToString(Timbrefiscal.Attribute("UUID").Value);
                 tim_fechatimbrado = Convert.ToDateTime(Timbrefiscal.Attribute("FechaTimbrado").Value);
-            }
-            catch (Exception ex)
-            {
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //}
         }
     }
 }
+
+/* ----------------------------------------------------------------------------------------
+ * --------------------------------- OBSERVACIONES-----------------------------------------
+ * 1.- RESESTRUCTURAR EL CÓDIGO ACTUAL AL SIGUIENTE FORMATO (PSEUDOCODIGO)
+ * IF (EXISTE EL NODO "X")
+ * {
+ *      XELEMENT "Z"  = ....;
+ *      .
+ *      .
+ *      .
+ *      Z.VARIABLE1 = Z.OBTENER (VALOR EN CUESTION);
+ *      .
+ *      .
+ *      .
+ * }
+ * ELSE
+ * {
+ *      Z.VARIABLE1 = "-";
+ *      .
+ *      .
+ *      .
+ * }
+ * _________________________________________________________________________________________
+ * 2.- TERMINAR DE EXTRAER DATOS EN LOS NODOS "NOMINA"
+ * _________________________________________________________________________________________
+ * 3.- TERMINAR DE CONDICIONAR LA EXTRACCION DE DATOS DEL PUNTO ANTERIOR
