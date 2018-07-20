@@ -19,6 +19,8 @@ namespace FormPruebaXML
         XNamespace pago10 = "http://www.sat.gob.mx/Pagos";
         XNamespace nomina12 = "http://www.sat.gob.mx/nomina12";
 
+        //REALIZAR SUMARIO DE NOTAS Y OBSERVACIONES EN LA PARTE INFERIOR Y SOLO INDICAR EN LA LINEA DESEADA EL NUMERO DE LA OBSERVACION
+
         //###################### DECLARACION DE VARIABLES GLOBALES #############################
         //REVISAR**
         //VARIABLES GLOBALES DEL NODO cfdi:Comprobante
@@ -168,10 +170,11 @@ namespace FormPruebaXML
                 else
                     comp_folio = Convert.ToString(Comprobante.Attribute("Folio").Value);
                 comp_fecha = Convert.ToDateTime(Comprobante.Attribute("Fecha").Value);
+                //EL VALOR DE SALIDA EN FORMA DE PAGO SE CONDICIONARA DE LA SIGUIENTE MANERA: SI EL VALOR EN METODO DE PAGO ES  "PUE" PODRA SER CUALQUIER VALOR DEL 1 AL 22 (VER ANEXO 20 CFDI 3.3. FORMA DE PAGO; O EN EL ARCHIVO EXCEL EN BASE DE DATOS), SI EL VALOR DE METODO DE PAGO ES "PPD" EL VALOR DEBERA SER "99" EL CUAL TIENE QUE VERIFICARSE EN ESTA CONDICION
                 comp_formapago = Convert.ToString(Comprobante.Attribute("FormaPago").Value);
-                comp_condpago = Convert.ToString(Comprobante.Attribute("CondicionesDePago").Value);
-                if (comp_condpago == null)
-                    comp_condpago = "-";
+               // comp_condpago = Convert.ToString(Comprobante.Attribute("CondicionesDePago").Value);
+                //if (comp_condpago == null)
+                  //  comp_condpago = "-"; Revisar condicion
                 comp_subtotal = Convert.ToString(Comprobante.Attribute("SubTotal").Value);
                 if (Comprobante.Attribute("Descuento") == null)
                     comp_descuento = "0.00";
@@ -180,8 +183,10 @@ namespace FormPruebaXML
                 comp_moneda = Convert.ToString(Comprobante.Attribute("Moneda").Value);
                 comp_total = Convert.ToString(Comprobante.Attribute("Total").Value);
                 comp_tipocomprobante = Convert.ToString(Comprobante.Attribute("TipoDeComprobante").Value);
+                //DE ACUERDO AL METODO DE PAGO SE CONDICIONARA EL VALOR DE SALIDA EN FORMA DE PAGO VER NOTA EN FORMA DE PAGO
                 comp_metodopago = Convert.ToString(Comprobante.Attribute("MetodoPago").Value);
                 comp_lugarexpedicion = Convert.ToString(Comprobante.Attribute("LugarExpedicion").Value);
+                //AGREGAR TIPO DE CAMBIO A ESTE NODO CONDICIONANDO QUE SI EL VALOR ES NULL REGRESE VALOR DECIMAL "1.0000"
 
                 //ELEMENTOS DEL NODO cfdi:Emisor
                 emi_regimenfiscal = Convert.ToString(Emisor.Attribute("RegimenFiscal").Value);
@@ -208,6 +213,7 @@ namespace FormPruebaXML
                     con_noid = "-";
                 else
                     con_noid = Convert.ToString(Concepto.Attribute("NoIdentificacion").Value);
+                //con_descripcion condicionar para poder detectar tantas partidas tenga el campo concepto y descricion y que el resultado sea de la siguiente manera Descripcion1 * Descricion2 * Descricion(n), se puede manejar con algun for i = 1 to 100 o con un foreach
                 con_descripcion = Convert.ToString(Concepto.Attribute("Descripcion").Value);
                 con_valorunitario = Convert.ToString(Concepto.Attribute("ValorUnitario").Value);
                 con_importe = Convert.ToString(Concepto.Attribute("Importe").Value);
@@ -240,7 +246,7 @@ namespace FormPruebaXML
                 imp_tr_tasacuota = Convert.ToString(Imp_traslado.Attribute("TasaOCuota").Value);
                 imp_tr_importe = Convert.ToString(Imp_traslado.Attribute("Importe").Value);
 
-                //ELEMENTOS DEL NODO cfdi:Retencion (DENTRO DE cfdi:Impuestos)
+                //ELEMENTOS DEL NODO cfdi:Retencion (DENTRO DE cfdi:Impuestos) // REALIZAR CONDICION DONDE SE VERIFIQUE EL ATRIBUTO "IMPUESTO" Y DEVUELVA EL VALOR DEL ATRIBUTO "IMPORTE"
                 imp_ret_impuesto = Convert.ToString(Imp_retencion.Attribute("Impuesto").Value);
                 imp_ret_importe = Convert.ToString(Imp_retencion.Attribute("Importe").Value);
 
