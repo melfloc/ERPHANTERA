@@ -330,3 +330,5 @@ namespace FormPruebaXML
  * 2.- TERMINAR DE EXTRAER DATOS EN LOS NODOS "NOMINA"
  * _________________________________________________________________________________________
  * 3.- TERMINAR DE CONDICIONAR LA EXTRACCION DE DATOS DEL PUNTO ANTERIOR
+ * _________________________________________________________________________________________
+ */
