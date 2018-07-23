@@ -33,6 +33,7 @@ namespace FormPruebaXML
         public string comp_subtotal;
         public string comp_descuento;
         public string comp_moneda;
+        public string comp_tipodecambio;
         public string comp_total;
         public string comp_tipocomprobante;
         public string comp_metodopago;
@@ -101,7 +102,7 @@ namespace FormPruebaXML
         //VARIABLES GLOBALES PARA NODO Nomina12:Emisor (DENTRO DE Nomina12:Nomina)
         public string emi_registropatronal;
 
-        //VARIABLES GLOBALES PARA NODO Nomina12:Emisor (DENTRO DE Nomina12:Nomina)
+        //VARIABLES GLOBALES PARA NODO Nomina12:Receptor (DENTRO DE Nomina12:Nomina)
         public string rec_antiguedad;
         public string rec_banco;
         public string rec_claveEntFed;
@@ -121,14 +122,36 @@ namespace FormPruebaXML
         public string rec_tipojornada;
         public string rec_tiporegimen;
 
+        //VARIABLES GLOBALES PARA NODO Nomina12:Percepciones
+        public string per_totalexento;
+        public string per_totalgravado;
+        public string per_totalsueldos;
+
+        //VARIABLES GLOBALES PARA NODO Nomina12:Percepcion
+        public string per_clave;
+        public string per_concepto;
+        public string per_importeexento;
+        public string per_importegravado;
+        public string per_tipopercepcion;
+
+        //VARIABLES GLOBALES PARA NODO Nomina12:Deducciones
+        public string ded_totalImpRet;
+        public string ded_totalOtDed;
+
+        //VARIABLES GLOBALES PARA NODO Nomina12:Deduccion
+        public string ded_clave;
+        public string ded_concepto;
+        public string ded_importe;
+        public string ded_tipodeduccion;
+
         //VARIABLES GLOBALES PARA NODO tfd:TimbreFiscalDigital
         public string tim_uuid;
         public DateTime tim_fechatimbrado;
 
         public void get_data(string ruta)
         {
-            //try
-            //{
+            try
+            {
                 //CARGA DEL DOCUMENTO XML
                 XDocument documento = XDocument.Load(ruta);
 
@@ -166,16 +189,14 @@ namespace FormPruebaXML
                 /**************/XElement Imp_traslado = Imp_Traslados.Element(cfdi.GetName("Traslado"));
                 /**/XElement Complemento = Comprobante.Element(cfdi.GetName("Complemento"));
                 /******/XElement Nomina = Complemento.Element(nomina12.GetName("Nomina"));
-                if (Nomina.HasElements == true)
-                {
-                    /**********/XElement Nom_emisor = Nomina.Element(nomina12.GetName("Emisor"));
-                    /**********/XElement Nom_receptor = Nomina.Element(nomina12.GetName("Receptor"));
-                    /**********/XElement Nom_percepciones = Nomina.Element(nomina12.GetName("Percepciones"));
-                    /**************/XElement Per_percepcion = Nom_percepciones.Element(nomina12.GetName("Percepcion"));
-                    /**********/XElement Nom_deducciones = Nomina.Element(nomina12.GetName("Deducciones"));
-                    /**************/XElement Ded_deduccion = Nom_deducciones.Element(nomina12.GetName("Deduccion"));
-                    
-                }
+
+                /**********/XElement Nom_emisor = Nomina.Element(nomina12.GetName("Emisor"));
+                /**********/XElement Nom_receptor = Nomina.Element(nomina12.GetName("Receptor"));
+                /**********/XElement Nom_percepciones = Nomina.Element(nomina12.GetName("Percepciones"));
+                /**************/XElement Per_percepcion = Nom_percepciones.Element(nomina12.GetName("Percepcion"));
+                /**********/XElement Nom_deducciones = Nomina.Element(nomina12.GetName("Deducciones"));
+                /**************/XElement Ded_deduccion = Nom_deducciones.Element(nomina12.GetName("Deduccion"));
+
                 /******/XElement Timbrefiscal = Complemento.Element(tfd.GetName("TimbreFiscalDigital"));
 
                 //############################ OBTENCION DE DATOS DE LOS NODOS #####################################
@@ -193,7 +214,11 @@ namespace FormPruebaXML
                     comp_folio = Convert.ToString(Comprobante.Attribute("Folio").Value);
                 comp_fecha = Convert.ToDateTime(Comprobante.Attribute("Fecha").Value);
                 //EL VALOR DE SALIDA EN FORMA DE PAGO SE CONDICIONARA DE LA SIGUIENTE MANERA: SI EL VALOR EN METODO DE PAGO ES  "PUE" PODRA SER CUALQUIER VALOR DEL 1 AL 22 (VER ANEXO 20 CFDI 3.3. FORMA DE PAGO; O EN EL ARCHIVO EXCEL EN BASE DE DATOS), SI EL VALOR DE METODO DE PAGO ES "PPD" EL VALOR DEBERA SER "99" EL CUAL TIENE QUE VERIFICARSE EN ESTA CONDICION
-                comp_formapago = Convert.ToString(Comprobante.Attribute("FormaPago").Value);
+                comp_metodopago = Convert.ToString(Comprobante.Attribute("MetodoPago").Value);
+                if (comp_metodopago == "PPD")
+                    comp_formapago = "99";
+                else
+                    comp_formapago = Convert.ToString(Comprobante.Attribute("FormaPago").Value);
                // comp_condpago = Convert.ToString(Comprobante.Attribute("CondicionesDePago").Value);
                 //if (comp_condpago == null)
                   //  comp_condpago = "-"; Revisar condicion
@@ -203,10 +228,14 @@ namespace FormPruebaXML
                 else
                     comp_descuento = Convert.ToString(Comprobante.Attribute("Descuento").Value);
                 comp_moneda = Convert.ToString(Comprobante.Attribute("Moneda").Value);
+                if (Comprobante.Attribute("TipoDeCambio") == null)
+                    comp_tipodecambio = "1.00";
+                else
+                    comp_tipodecambio = Convert.ToString(Comprobante.Attribute("TipoDeCambio").Value);
                 comp_total = Convert.ToString(Comprobante.Attribute("Total").Value);
                 comp_tipocomprobante = Convert.ToString(Comprobante.Attribute("TipoDeComprobante").Value);
                 //DE ACUERDO AL METODO DE PAGO SE CONDICIONARA EL VALOR DE SALIDA EN FORMA DE PAGO VER NOTA EN FORMA DE PAGO
-                comp_metodopago = Convert.ToString(Comprobante.Attribute("MetodoPago").Value);
+                
                 comp_lugarexpedicion = Convert.ToString(Comprobante.Attribute("LugarExpedicion").Value);
                 //AGREGAR TIPO DE CAMBIO A ESTE NODO CONDICIONANDO QUE SI EL VALOR ES NULL REGRESE VALOR DECIMAL "1.0000"
 
@@ -287,20 +316,69 @@ namespace FormPruebaXML
                             break;
                     }
                 }
-                
 
-                #region nomina
                 //ELEMNTOS DEL NODO Nomina12:Nomina
+                nom_fechIniPago = Convert.ToDateTime(Nomina.Attribute("FechaInicialPago").Value);
+                nom_fechapago = Convert.ToDateTime(Nomina.Attribute("FechaPago").Value);
+                nom_fechFinalPago = Convert.ToDateTime(Nomina.Attribute("FechaFinalPago").Value);
+                nom_numdiaspagados = Convert.ToString(Nomina.Attribute("NumDiasPagados").Value);
+                nom_tiponomina = Convert.ToString(Nomina.Attribute("TipoNomina").Value);
+                nom_totaldeducciones = Convert.ToString(Nomina.Attribute("TotalDeducciones").Value);
+                nom_totalpercepciones = Convert.ToString(Nomina.Attribute("Totalpercepciones").Value);
 
-                #endregion
+                //ELEMENTOS DEL NODO Nomina12:Emisor (DENTRO DE Nomina12:Nomina)
+                emi_registropatronal = Convert.ToString(Nom_emisor.Attribute("RegistroPatronal").Value);
+
+                //ELEMENTOS DEL NODO Nomina12:Receptor (DENTRO DE Nomina12:Nomina)
+                rec_antiguedad = Convert.ToString(Nom_receptor.Attribute("Antigüedad").Value);
+                rec_banco = Convert.ToString(Nom_receptor.Attribute("Banco").Value);
+                rec_claveEntFed = Convert.ToString(Nom_receptor.Attribute("ClaveEntFed").Value);
+                rec_cuentabancaria = Convert.ToString(Nom_receptor.Attribute("CuentaBancaria").Value);
+                rec_curp = Convert.ToString(Nom_receptor.Attribute("Curp").Value);
+                rec_departamento = Convert.ToString(Nom_receptor.Attribute("rec_departamento").Value);
+                rec_fechaIniLaboral = Convert.ToDateTime(Nom_receptor.Attribute("FechaInicioRelLaboral").Value);
+                rec_nombre = Convert.ToString(Nom_receptor.Attribute("Nombre").Value);
+                rec_numempleado = Convert.ToString(Nom_receptor.Attribute("NumEmpleado").Value);
+                rec_numSegSoc = Convert.ToString(Nom_receptor.Attribute("NumSeguridadSocial").Value);
+                rec_periodiPago = Convert.ToString(Nom_receptor.Attribute("PeriodicidadPago").Value);
+                rec_puesto = Convert.ToString(Nom_receptor.Attribute("Puesto").Value);
+                rec_riesgopuesto = Convert.ToString(Nom_receptor.Attribute("ResgoPuesto").Value);
+                rec_salariobaseCA = Convert.ToString(Nom_receptor.Attribute("SalarioBaseCotApor").Value);
+                rec_salariodiarioInt = Convert.ToString(Nom_receptor.Attribute("SalarioDiarioIntegrado").Value);
+                rec_sindicalizado = Convert.ToString(Nom_receptor.Attribute("Sindicalizado").Value);
+                rec_tipocontrato = Convert.ToString(Nom_receptor.Attribute("TipoContrato").Value);
+                rec_tipojornada = Convert.ToString(Nom_receptor.Attribute("TipoJornada").Value);
+                rec_tiporegimen = Convert.ToString(Nom_receptor.Attribute("TipoRegimen").Value);
+
+                //ELEMENTOS DEL NODO Nomina12:Percepciones
+                per_totalexento = Convert.ToString(Nom_percepciones.Attribute("TotalExento").Value);
+                per_totalgravado = Convert.ToString(Nom_percepciones.Attribute("TotalGravado").Value);
+                per_totalsueldos = Convert.ToString(Nom_percepciones.Attribute("TotalSueldos").Value);
+
+                //ELEMENTOS DEL NODO Nomina12:Percepcion
+                per_clave = Convert.ToString(Per_percepcion.Attribute("Clave").Value);
+                per_concepto = Convert.ToString(Per_percepcion.Attribute("Concepto").Value);
+                per_importeexento = Convert.ToString(Per_percepcion.Attribute("ImporteExento").Value);
+                per_importegravado = Convert.ToString(Per_percepcion.Attribute("ImporteGravado").Value);
+                per_tipopercepcion = Convert.ToString(Per_percepcion.Attribute("TipoPercepcion").Value);
+
+                //ELEMENTOS DEL NODO Nomina12:Deducciones
+                ded_totalImpRet = Convert.ToString(Nom_deducciones.Attribute("TotalImpuestosRetenidos").Value);
+                ded_totalOtDed = Convert.ToString(Nom_deducciones.Attribute("TotalOtrasDeducciones").Value);
+
+                //ELEMENTOS DEL NODO Nomina12:Deduccion
+                ded_clave = Convert.ToString(Ded_deduccion.Attribute("Clave").Value);
+                ded_concepto = Convert.ToString(Ded_deduccion.Attribute("Concepto").Value);
+                ded_importe = Convert.ToString(Ded_deduccion.Attribute("Importe").Value);
+                ded_tipodeduccion = Convert.ToString(Ded_deduccion.Attribute("TipoDeduccion").Value);
 
                 //ELEMENTOS DEL NODO tfd:TimbreFiscalDigital
                 tim_uuid = Convert.ToString(Timbrefiscal.Attribute("UUID").Value);
                 tim_fechatimbrado = Convert.ToDateTime(Timbrefiscal.Attribute("FechaTimbrado").Value);
-            //}
-            //catch (Exception ex)
-            //{
-            //}
+            }
+            catch (Exception ex)
+            {
+            }
         }
     }
 }
@@ -327,7 +405,7 @@ namespace FormPruebaXML
  *      .
  * }
  * _________________________________________________________________________________________
- * 2.- TERMINAR DE EXTRAER DATOS EN LOS NODOS "NOMINA"
+ * 2.- ANALIZAR CONDICIONAMIENTO DE VARIABLES "TIPO DE CAMBIO" Y "FORMA DE PAGO" EN NODO COMPROBANTE
  * _________________________________________________________________________________________
  * 3.- TERMINAR DE CONDICIONAR LA EXTRACCION DE DATOS DEL PUNTO ANTERIOR
  * _________________________________________________________________________________________
