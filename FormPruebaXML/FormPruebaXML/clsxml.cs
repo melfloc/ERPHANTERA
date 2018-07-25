@@ -172,8 +172,8 @@ namespace FormPruebaXML
 
         public void get_data(string ruta)
         {
-            try
-            {
+            //try
+            //{
                 //CARGA DEL DOCUMENTO XML
                 XDocument documento = XDocument.Load(ruta);
 
@@ -208,10 +208,7 @@ namespace FormPruebaXML
                     comp_tipodecambio = Convert.ToString(Comprobante.Attribute("TipoDeCambio").Value);
                 comp_total = Convert.ToString(Comprobante.Attribute("Total").Value);
                 comp_tipocomprobante = Convert.ToString(Comprobante.Attribute("TipoDeComprobante").Value);
-                //DE ACUERDO AL METODO DE PAGO SE CONDICIONARA EL VALOR DE SALIDA EN FORMA DE PAGO VER NOTA EN FORMA DE PAGO
-
                 comp_lugarexpedicion = Convert.ToString(Comprobante.Attribute("LugarExpedicion").Value);
-                //AGREGAR TIPO DE CAMBIO A ESTE NODO CONDICIONANDO QUE SI EL VALOR ES NULL REGRESE VALOR DECIMAL "1.0000"
                 //---------------------------------------------------------------------------------------------
 
                 /**/XElement Emisor = Comprobante.Element(cfdi.GetName("Emisor"));
@@ -236,14 +233,70 @@ namespace FormPruebaXML
 
                 /**/XElement Conceptos = Comprobante.Element(cfdi.GetName("Conceptos"));
                 /******/XElement Concepto = Conceptos.Element(cfdi.GetName("Concepto"));
-                /**********/XElement Con_impuestos = Concepto.Element(cfdi.GetName("Impuestos"));
-                /**********/XElement Con_traslados = Con_impuestos.Element(cfdi.GetName("Traslados"));
-                /**************/XElement Con_traslado = Con_traslados.Element(cfdi.GetName("Traslado"));
-                
-                /**********/XElement Con_retenciones = Con_impuestos.Element(cfdi.GetName("Retenciones"));
+                //ELEMENTOS DEL NODO cfdi:Concepto
+                con_claveprodserv = Convert.ToString(Concepto.Attribute("ClaveProdServ").Value);
+                con_claveunidad = Convert.ToString(Concepto.Attribute("ClaveUnidad").Value);
+                con_cantidad = Convert.ToString(Concepto.Attribute("Cantidad").Value);
+                if (Concepto.Attribute("Unidad") == null)
+                    con_unidad = "-";
+                else
+                    con_unidad = Convert.ToString(Concepto.Attribute("Unidad").Value);
+                if (Concepto.Attribute("NoIdentificacion") == null)
+                    con_noid = "-";
+                else
+                    con_noid = Convert.ToString(Concepto.Attribute("NoIdentificacion").Value);
+                foreach (XElement con in Conceptos.Elements(cfdi.GetName("Concepto")))
+                {
+                    con_descripcion += Convert.ToString(con.Attribute("Descripcion").Value) + " * ";
+                }
+                con_valorunitario = Convert.ToString(Concepto.Attribute("ValorUnitario").Value);
+                con_importe = Convert.ToString(Concepto.Attribute("Importe").Value);
+                if (Concepto.Attribute("Descuento") == null)
+                    comp_descuento = "0.00";
+                else
+                    con_descuento = Convert.ToString(Concepto.Attribute("Descuento").Value);
+            //-----------------------------------------------------------------------------------------------
+
+            if (Concepto.Element(cfdi.GetName("Impuestos")) != null)
+            {
+                /**********/
+                XElement Con_impuestos = Concepto.Element(cfdi.GetName("Impuestos"));
+
+                if (Con_impuestos.Element(cfdi.GetName("Traslados")) != null)
+                {
+                    /**********/
+                    XElement Con_traslados = Con_impuestos.Element(cfdi.GetName("Traslados"));
+
+                    /**************/
+                    XElement Con_traslado = Con_traslados.Element(cfdi.GetName("Traslado"));
+                    //------------------ELEMENTOS DEL NODO cfdi:Traslado (DENTRO DE cfdi:Concepto)-------------------
+                    tr_base = Convert.ToString(Con_traslado.Attribute("Base").Value);
+                    tr_impuesto = Convert.ToString(Con_traslado.Attribute("Impuesto").Value);
+                    tr_tipofactor = Convert.ToString(Con_traslado.Attribute("TipoFactor").Value);
+                    if (Con_traslado.Attribute("TasaOCuota") == null)
+                        tr_tasacuota = "1.00";
+                    else
+                        tr_tasacuota = Convert.ToString(Con_traslado.Attribute("TasaOCuota").Value);
+                    if (Con_traslado.Attribute("Importe") == null)
+                        tr_importe = tr_base;
+                    else
+                        tr_importe = Convert.ToString(Con_traslado.Attribute("Importe").Value);
+                    //-----------------------------------------------------------------------------------------------
+                }
+                else
+                {
+                    tr_base = "0.00";
+                    tr_impuesto = "-";
+                    tr_tipofactor = "-";
+                    tr_tasacuota = "0.00";
+                    tr_importe = "0.00";
+                }
+                /**********/
+                XElement Con_retenciones = Con_impuestos.Element(cfdi.GetName("Retenciones"));
                 if (Con_retenciones != null)
                 {
-                    /**************/XElement Con_retencion = Con_retenciones.Element(cfdi.GetName("Retencion"));
+                    /**************/
+                    XElement Con_retencion = Con_retenciones.Element(cfdi.GetName("Retencion"));
                     ret_base = Convert.ToString(Con_retencion.Attribute("Base").Value);
                     ret_impuesto = Convert.ToString(Con_retencion.Attribute("Impuesto").Value);
                     ret_tipofactor = Convert.ToString(Con_retencion.Attribute("TipoFactor").Value);
@@ -258,7 +311,10 @@ namespace FormPruebaXML
                     ret_tasacuota = "0.00";
                     ret_importe = "0.00";
                 }
-                
+            }
+/*#####################################################################################################################
+ * ############################################# REVISAR A PARTIR DE AQUI #############################################
+ * ####################################################################################################################
                 /******/XElement Impuestos = Comprobante.Element(cfdi.GetName("Impuestos"));
                 if (Impuestos != null)
                 {
@@ -307,132 +363,209 @@ namespace FormPruebaXML
                 
                 /**/XElement Complemento = Comprobante.Element(cfdi.GetName("Complemento"));
                 /******/XElement Nomina = Complemento.Element(nomina12.GetName("Nomina"));
-                /**********/XElement Nom_emisor = Nomina.Element(nomina12.GetName("Emisor"));
-                /**********/XElement Nom_receptor = Nomina.Element(nomina12.GetName("Receptor"));
-                /**********/XElement Nom_percepciones = Nomina.Element(nomina12.GetName("Percepciones"));
-                /**************/XElement Per_percepcion = Nom_percepciones.Element(nomina12.GetName("Percepcion"));
-                /**********/XElement Nom_deducciones = Nomina.Element(nomina12.GetName("Deducciones"));
-                /**************/XElement Ded_deduccion = Nom_deducciones.Element(nomina12.GetName("Deduccion"));
-                /******/XElement Pagos = Complemento.Element(pago10.GetName("Pagos"));
-                /**********/XElement Pago = Pagos.Element(pago10.GetName("Pago"));
-                /**************/XElement DoctoRel = Pago.Element(pago10.GetName("DoctoRelacionado"));
-
-                /******/XElement Timbrefiscal = Complemento.Element(tfd.GetName("TimbreFiscalDigital"));
-
-                //ELEMENTOS DEL NODO cfdi:Concepto
-                con_claveprodserv = Convert.ToString(Concepto.Attribute("ClaveProdServ").Value);
-                con_claveunidad = Convert.ToString(Concepto.Attribute("ClaveUnidad").Value);
-                con_cantidad = Convert.ToString(Concepto.Attribute("Cantidad").Value);
-                if (Concepto.Attribute("Unidad") == null)
-                    con_unidad = "-";
-                else
-                    con_unidad = Convert.ToString(Concepto.Attribute("Unidad").Value);
-                if (Concepto.Attribute("NoIdentificacion") == null)
-                    con_noid = "-";
-                else
-                    con_noid = Convert.ToString(Concepto.Attribute("NoIdentificacion").Value);
-                foreach (XElement con in Conceptos.Elements(cfdi.GetName("Concepto")))
+                if (Nomina != null)
                 {
-                    con_descripcion += Convert.ToString(con.Attribute("Descripcion").Value) + " * ";
+                    //--------------------------ELEMENTOS DEL NODO Nomina12:Nomina--------------------------------
+                    nom_fechIniPago = Convert.ToDateTime(Nomina.Attribute("FechaInicialPago").Value);
+                    nom_fechapago = Convert.ToDateTime(Nomina.Attribute("FechaPago").Value);
+                    nom_fechFinalPago = Convert.ToDateTime(Nomina.Attribute("FechaFinalPago").Value);
+                    nom_numdiaspagados = Convert.ToString(Nomina.Attribute("NumDiasPagados").Value);
+                    nom_tiponomina = Convert.ToString(Nomina.Attribute("TipoNomina").Value);
+                    nom_totaldeducciones = Convert.ToString(Nomina.Attribute("TotalDeducciones").Value);
+                    nom_totalpercepciones = Convert.ToString(Nomina.Attribute("Totalpercepciones").Value);
+                    //--------------------------------------------------------------------------------------------
+
+                    /**********/XElement Nom_emisor = Nomina.Element(nomina12.GetName("Emisor"));
+                    //--------------ELEMENTOS DEL NODO Nomina12:Emisor (DENTRO DE Nomina12:Nomina)----------------
+                    emi_registropatronal = Convert.ToString(Nom_emisor.Attribute("RegistroPatronal").Value);
+                    //--------------------------------------------------------------------------------------------
+
+                    /**********/XElement Nom_receptor = Nomina.Element(nomina12.GetName("Receptor"));
+                    //--------------ELEMENTOS DEL NODO Nomina12:Receptor (DENTRO DE Nomina12:Nomina)--------------------
+                    rec_antiguedad = Convert.ToString(Nom_receptor.Attribute("Antigüedad").Value);
+                    rec_banco = Convert.ToString(Nom_receptor.Attribute("Banco").Value);
+                    rec_claveEntFed = Convert.ToString(Nom_receptor.Attribute("ClaveEntFed").Value);
+                    rec_cuentabancaria = Convert.ToString(Nom_receptor.Attribute("CuentaBancaria").Value);
+                    rec_curp = Convert.ToString(Nom_receptor.Attribute("Curp").Value);
+                    rec_departamento = Convert.ToString(Nom_receptor.Attribute("rec_departamento").Value);
+                    rec_fechaIniLaboral = Convert.ToDateTime(Nom_receptor.Attribute("FechaInicioRelLaboral").Value);
+                    rec_nombre = Convert.ToString(Nom_receptor.Attribute("Nombre").Value);
+                    rec_numempleado = Convert.ToString(Nom_receptor.Attribute("NumEmpleado").Value);
+                    rec_numSegSoc = Convert.ToString(Nom_receptor.Attribute("NumSeguridadSocial").Value);
+                    rec_periodiPago = Convert.ToString(Nom_receptor.Attribute("PeriodicidadPago").Value);
+                    rec_puesto = Convert.ToString(Nom_receptor.Attribute("Puesto").Value);
+                    rec_riesgopuesto = Convert.ToString(Nom_receptor.Attribute("ResgoPuesto").Value);
+                    rec_salariobaseCA = Convert.ToString(Nom_receptor.Attribute("SalarioBaseCotApor").Value);
+                    rec_salariodiarioInt = Convert.ToString(Nom_receptor.Attribute("SalarioDiarioIntegrado").Value);
+                    rec_sindicalizado = Convert.ToString(Nom_receptor.Attribute("Sindicalizado").Value);
+                    rec_tipocontrato = Convert.ToString(Nom_receptor.Attribute("TipoContrato").Value);
+                    rec_tipojornada = Convert.ToString(Nom_receptor.Attribute("TipoJornada").Value);
+                    rec_tiporegimen = Convert.ToString(Nom_receptor.Attribute("TipoRegimen").Value);
+                    //---------------------------------------------------------------------------------------------------
+
+                    /**********/XElement Nom_percepciones = Nomina.Element(nomina12.GetName("Percepciones"));
+                    //----------------------------ELEMENTOS DEL NODO Nomina12:Percepciones--------------------------------
+                    per_totalexento = Convert.ToString(Nom_percepciones.Attribute("TotalExento").Value);
+                    per_totalgravado = Convert.ToString(Nom_percepciones.Attribute("TotalGravado").Value);
+                    per_totalsueldos = Convert.ToString(Nom_percepciones.Attribute("TotalSueldos").Value);
+                    //---------------------------------------------------------------------------------------------------
+
+                    /**************/XElement Per_percepcion = Nom_percepciones.Element(nomina12.GetName("Percepcion"));
+                    //--------------------------ELEMENTOS DEL NODO Nomina12:Percepcion------------------------------------
+                    per_clave = Convert.ToString(Per_percepcion.Attribute("Clave").Value);
+                    per_concepto = Convert.ToString(Per_percepcion.Attribute("Concepto").Value);
+                    per_importeexento = Convert.ToString(Per_percepcion.Attribute("ImporteExento").Value);
+                    per_importegravado = Convert.ToString(Per_percepcion.Attribute("ImporteGravado").Value);
+                    per_tipopercepcion = Convert.ToString(Per_percepcion.Attribute("TipoPercepcion").Value);
+                    //---------------------------------------------------------------------------------------------------
+
+                    /**********/XElement Nom_deducciones = Nomina.Element(nomina12.GetName("Deducciones"));
+                    //---------------------------ELEMENTOS DEL NODO Nomina12:Deducciones---------------------------------
+                    ded_totalImpRet = Convert.ToString(Nom_deducciones.Attribute("TotalImpuestosRetenidos").Value);
+                    ded_totalOtDed = Convert.ToString(Nom_deducciones.Attribute("TotalOtrasDeducciones").Value);
+                    //---------------------------------------------------------------------------------------------------
+
+                    /**************/XElement Ded_deduccion = Nom_deducciones.Element(nomina12.GetName("Deduccion"));
+                    //------------------------------ELEMENTOS DEL NODO Nomina12:Deduccion--------------------------------
+                    ded_clave = Convert.ToString(Ded_deduccion.Attribute("Clave").Value);
+                    ded_concepto = Convert.ToString(Ded_deduccion.Attribute("Concepto").Value);
+                    ded_importe = Convert.ToString(Ded_deduccion.Attribute("Importe").Value);
+                    ded_tipodeduccion = Convert.ToString(Ded_deduccion.Attribute("TipoDeduccion").Value);
+                    //---------------------------------------------------------------------------------------------------
                 }
-                con_valorunitario = Convert.ToString(Concepto.Attribute("ValorUnitario").Value);
-                con_importe = Convert.ToString(Concepto.Attribute("Importe").Value);
-                if (Concepto.Attribute("Descuento") == null)
-                    comp_descuento = "0.00";
                 else
-                    con_descuento = Convert.ToString(Concepto.Attribute("Descuento").Value);
+                {
+                    //################### AGREGAR VALORES NULOS A LAS VARIABLES DEL BLOQUE IF ###########################
+                    //--------------------------ELEMENTOS DEL NODO Nomina12:Nomina--------------------------------
+                    nom_fechIniPago = new DateTime(1999,01,01);
+                    nom_fechapago = new DateTime(1999, 01, 01);
+                    nom_fechFinalPago = new DateTime(1999, 01, 01);
+                    nom_numdiaspagados = "0.00";
+                    nom_tiponomina = "-";
+                    nom_totaldeducciones = "0.00";
+                    nom_totalpercepciones = "0.00";
+                    //--------------------------------------------------------------------------------------------
 
-                //ELEMENTOS DEL NODO cfdi:Traslado (DENTRO DE cfdi:Concepto)
-                tr_base = Convert.ToString(Con_traslado.Attribute("Base").Value);
-                tr_impuesto = Convert.ToString(Con_traslado.Attribute("Impuesto").Value);
-                tr_tipofactor = Convert.ToString(Con_traslado.Attribute("TipoFactor").Value);
-                tr_tasacuota = Convert.ToString(Con_traslado.Attribute("TasaOCuota").Value);
-                tr_importe = Convert.ToString(Con_traslado.Attribute("Importe").Value);
+                    //--------------ELEMENTOS DEL NODO Nomina12:Emisor (DENTRO DE Nomina12:Nomina)----------------
+                    emi_registropatronal = "-";
+                    //--------------------------------------------------------------------------------------------
 
-                //ELEMNTOS DEL NODO Nomina12:Nomina
-                nom_fechIniPago = Convert.ToDateTime(Nomina.Attribute("FechaInicialPago").Value);
-                nom_fechapago = Convert.ToDateTime(Nomina.Attribute("FechaPago").Value);
-                nom_fechFinalPago = Convert.ToDateTime(Nomina.Attribute("FechaFinalPago").Value);
-                nom_numdiaspagados = Convert.ToString(Nomina.Attribute("NumDiasPagados").Value);
-                nom_tiponomina = Convert.ToString(Nomina.Attribute("TipoNomina").Value);
-                nom_totaldeducciones = Convert.ToString(Nomina.Attribute("TotalDeducciones").Value);
-                nom_totalpercepciones = Convert.ToString(Nomina.Attribute("Totalpercepciones").Value);
+                    //--------------ELEMENTOS DEL NODO Nomina12:Receptor (DENTRO DE Nomina12:Nomina)--------------
+                    rec_antiguedad = "-";
+                    rec_banco = "000";
+                    rec_claveEntFed = "-";
+                    rec_cuentabancaria = "-";
+                    rec_curp = "-";
+                    rec_departamento = "-";
+                    rec_fechaIniLaboral = new DateTime(1999, 01, 01);
+                    rec_nombre = "-";
+                    rec_numempleado = "-";
+                    rec_numSegSoc = "-";
+                    rec_periodiPago = "-";
+                    rec_puesto = "-";
+                    rec_riesgopuesto = "-";
+                    rec_salariobaseCA = "-";
+                    rec_salariodiarioInt = "-";
+                    rec_sindicalizado = "-";
+                    rec_tipocontrato = "-";
+                    rec_tipojornada = "-";
+                    rec_tiporegimen = "-";
+                    //---------------------------------------------------------------------------------------------------
 
-                //ELEMENTOS DEL NODO Pago10:Pago
-                pag_fechaPago = Convert.ToDateTime(Pago.Attribute("FechaPago").Value);
-                pag_formaPagoP = Convert.ToString(Pago.Attribute("FormaDePagoP").Value);
-                pag_monedaP = Convert.ToString(Pago.Attribute("MonedaP").Value);
-                pag_monto = Convert.ToString(Pago.Attribute("Monto").Value);
-                pag_rfcEmisorCO = Convert.ToString(Pago.Attribute("RfcEmisorCtaOrd").Value);
-                pag_nomBancOrdExt = Convert.ToString(Pago.Attribute("NomBancoOrdExt").Value);
-                pag_ctaOrdenante = Convert.ToString(Pago.Attribute("CtaOrdenante").Value);
-                pag_rfcEmiCtaBen = Convert.ToString(Pago.Attribute("RfcEmisorCtaBen").Value);
-                pag_ctaBeneficiario = Convert.ToString(Pago.Attribute("CtaBeneficiario").Value);
+                    //----------------------------ELEMENTOS DEL NODO Nomina12:Percepciones--------------------------------
+                    per_totalexento = "0.00";
+                    per_totalgravado = "0.00";
+                    per_totalsueldos = "0.00";
+                    //---------------------------------------------------------------------------------------------------
 
-                //ELEMENTOS DEL NODO Pago10:DoctoRelacionado
-                dr_idDoc = Convert.ToString(DoctoRel.Attribute("IdDocumento").Value);
-                dr_serie = Convert.ToString(DoctoRel.Attribute("Serie").Value);
-                dr_folio = Convert.ToString(DoctoRel.Attribute("Folio").Value);
-                dr_monedaDR = Convert.ToString(DoctoRel.Attribute("MonedaDR").Value);
-                dr_metodoPagoDR = Convert.ToString(DoctoRel.Attribute("MetodoDePagoDR").Value);
-                dr_numParcialidad = Convert.ToString(DoctoRel.Attribute("NumParcialidad").Value);
-                dr_impSaldoAnt = Convert.ToString(DoctoRel.Attribute("ImpSaldoAnt").Value);
-                dr_impPagado = Convert.ToString(DoctoRel.Attribute("ImpPagado").Value);
-                dr_impSaldoIns = Convert.ToString(DoctoRel.Attribute("ImpSaldoInsoluto").Value);
+                    //--------------------------ELEMENTOS DEL NODO Nomina12:Percepcion------------------------------------
+                    per_clave = "-";
+                    per_concepto = "-";
+                    per_importeexento = "0.00";
+                    per_importegravado = "0.00";
+                    per_tipopercepcion = "-";
+                    //---------------------------------------------------------------------------------------------------
 
-                //ELEMENTOS DEL NODO Nomina12:Emisor (DENTRO DE Nomina12:Nomina)
-                emi_registropatronal = Convert.ToString(Nom_emisor.Attribute("RegistroPatronal").Value);
+                    //---------------------------ELEMENTOS DEL NODO Nomina12:Deducciones---------------------------------
+                    ded_totalImpRet = "0.00";
+                    ded_totalOtDed = "0.00";
+                    //---------------------------------------------------------------------------------------------------
 
-                //ELEMENTOS DEL NODO Nomina12:Receptor (DENTRO DE Nomina12:Nomina)
-                rec_antiguedad = Convert.ToString(Nom_receptor.Attribute("Antigüedad").Value);
-                rec_banco = Convert.ToString(Nom_receptor.Attribute("Banco").Value);
-                rec_claveEntFed = Convert.ToString(Nom_receptor.Attribute("ClaveEntFed").Value);
-                rec_cuentabancaria = Convert.ToString(Nom_receptor.Attribute("CuentaBancaria").Value);
-                rec_curp = Convert.ToString(Nom_receptor.Attribute("Curp").Value);
-                rec_departamento = Convert.ToString(Nom_receptor.Attribute("rec_departamento").Value);
-                rec_fechaIniLaboral = Convert.ToDateTime(Nom_receptor.Attribute("FechaInicioRelLaboral").Value);
-                rec_nombre = Convert.ToString(Nom_receptor.Attribute("Nombre").Value);
-                rec_numempleado = Convert.ToString(Nom_receptor.Attribute("NumEmpleado").Value);
-                rec_numSegSoc = Convert.ToString(Nom_receptor.Attribute("NumSeguridadSocial").Value);
-                rec_periodiPago = Convert.ToString(Nom_receptor.Attribute("PeriodicidadPago").Value);
-                rec_puesto = Convert.ToString(Nom_receptor.Attribute("Puesto").Value);
-                rec_riesgopuesto = Convert.ToString(Nom_receptor.Attribute("ResgoPuesto").Value);
-                rec_salariobaseCA = Convert.ToString(Nom_receptor.Attribute("SalarioBaseCotApor").Value);
-                rec_salariodiarioInt = Convert.ToString(Nom_receptor.Attribute("SalarioDiarioIntegrado").Value);
-                rec_sindicalizado = Convert.ToString(Nom_receptor.Attribute("Sindicalizado").Value);
-                rec_tipocontrato = Convert.ToString(Nom_receptor.Attribute("TipoContrato").Value);
-                rec_tipojornada = Convert.ToString(Nom_receptor.Attribute("TipoJornada").Value);
-                rec_tiporegimen = Convert.ToString(Nom_receptor.Attribute("TipoRegimen").Value);
+                    //------------------------------ELEMENTOS DEL NODO Nomina12:Deduccion--------------------------------
+                    ded_clave = "-";
+                    ded_concepto = "-";
+                    ded_importe = "0.00";
+                    ded_tipodeduccion = "0.00";
+                    //---------------------------------------------------------------------------------------------------
+                }
 
-                //ELEMENTOS DEL NODO Nomina12:Percepciones
-                per_totalexento = Convert.ToString(Nom_percepciones.Attribute("TotalExento").Value);
-                per_totalgravado = Convert.ToString(Nom_percepciones.Attribute("TotalGravado").Value);
-                per_totalsueldos = Convert.ToString(Nom_percepciones.Attribute("TotalSueldos").Value);
 
-                //ELEMENTOS DEL NODO Nomina12:Percepcion
-                per_clave = Convert.ToString(Per_percepcion.Attribute("Clave").Value);
-                per_concepto = Convert.ToString(Per_percepcion.Attribute("Concepto").Value);
-                per_importeexento = Convert.ToString(Per_percepcion.Attribute("ImporteExento").Value);
-                per_importegravado = Convert.ToString(Per_percepcion.Attribute("ImporteGravado").Value);
-                per_tipopercepcion = Convert.ToString(Per_percepcion.Attribute("TipoPercepcion").Value);
+                /******/
+                XElement Pagos = Complemento.Element(pago10.GetName("Pagos"));
+                if (Pagos != null)
+                {
+                    /**********/XElement Pago = Pagos.Element(pago10.GetName("Pago"));
+                    //---------------------------------ELEMENTOS DEL NODO Pago10:Pago-------------------------------------
+                    pag_fechaPago = Convert.ToDateTime(Pago.Attribute("FechaPago").Value);
+                    pag_formaPagoP = Convert.ToString(Pago.Attribute("FormaDePagoP").Value);
+                    pag_monedaP = Convert.ToString(Pago.Attribute("MonedaP").Value);
+                    pag_monto = Convert.ToString(Pago.Attribute("Monto").Value);
+                    pag_rfcEmisorCO = Convert.ToString(Pago.Attribute("RfcEmisorCtaOrd").Value);
+                    pag_nomBancOrdExt = Convert.ToString(Pago.Attribute("NomBancoOrdExt").Value);
+                    pag_ctaOrdenante = Convert.ToString(Pago.Attribute("CtaOrdenante").Value);
+                    pag_rfcEmiCtaBen = Convert.ToString(Pago.Attribute("RfcEmisorCtaBen").Value);
+                    pag_ctaBeneficiario = Convert.ToString(Pago.Attribute("CtaBeneficiario").Value);
+                    //----------------------------------------------------------------------------------------------------
 
-                //ELEMENTOS DEL NODO Nomina12:Deducciones
-                ded_totalImpRet = Convert.ToString(Nom_deducciones.Attribute("TotalImpuestosRetenidos").Value);
-                ded_totalOtDed = Convert.ToString(Nom_deducciones.Attribute("TotalOtrasDeducciones").Value);
+                    /**************/XElement DoctoRel = Pago.Element(pago10.GetName("DoctoRelacionado"));
+                    //------------------------ELEMENTOS DEL NODO Pago10:DoctoRelacionado----------------------------------
+                    dr_idDoc = Convert.ToString(DoctoRel.Attribute("IdDocumento").Value);
+                    dr_serie = Convert.ToString(DoctoRel.Attribute("Serie").Value);
+                    dr_folio = Convert.ToString(DoctoRel.Attribute("Folio").Value);
+                    dr_monedaDR = Convert.ToString(DoctoRel.Attribute("MonedaDR").Value);
+                    dr_metodoPagoDR = Convert.ToString(DoctoRel.Attribute("MetodoDePagoDR").Value);
+                    dr_numParcialidad = Convert.ToString(DoctoRel.Attribute("NumParcialidad").Value);
+                    dr_impSaldoAnt = Convert.ToString(DoctoRel.Attribute("ImpSaldoAnt").Value);
+                    dr_impPagado = Convert.ToString(DoctoRel.Attribute("ImpPagado").Value);
+                    dr_impSaldoIns = Convert.ToString(DoctoRel.Attribute("ImpSaldoInsoluto").Value);
+                    //----------------------------------------------------------------------------------------------------
+                }
+                else
+                {
+                    //---------------------------------ELEMENTOS DEL NODO Pago10:Pago-------------------------------------
+                    pag_fechaPago = new DateTime(1991, 01, 01);
+                    pag_formaPagoP = "-";
+                    pag_monedaP = "-";
+                    pag_monto = "0.00";
+                    pag_rfcEmisorCO = "-";
+                    pag_nomBancOrdExt = "-";
+                    pag_ctaOrdenante = "-";
+                    pag_rfcEmiCtaBen = "-";
+                    pag_ctaBeneficiario = "-";
+                    //----------------------------------------------------------------------------------------------------
 
-                //ELEMENTOS DEL NODO Nomina12:Deduccion
-                ded_clave = Convert.ToString(Ded_deduccion.Attribute("Clave").Value);
-                ded_concepto = Convert.ToString(Ded_deduccion.Attribute("Concepto").Value);
-                ded_importe = Convert.ToString(Ded_deduccion.Attribute("Importe").Value);
-                ded_tipodeduccion = Convert.ToString(Ded_deduccion.Attribute("TipoDeduccion").Value);
+                    //---------------------------ELEMENTOS DEL NODO Pago10:DoctoRelacionado-------------------------------
+                    dr_idDoc = "-";
+                    dr_serie = "-";
+                    dr_folio = "-";
+                    dr_monedaDR = "-";
+                    dr_metodoPagoDR = "-";
+                    dr_numParcialidad = "-";
+                    dr_impSaldoAnt = "-";
+                    dr_impPagado = "0.00";
+                    dr_impSaldoIns = "0.00";
+                    //----------------------------------------------------------------------------------------------------
+                }
 
+                /******/XElement Timbrefiscal = Complemento.Element(tfd.GetName("TimbreFiscalDigital")); 
                 //ELEMENTOS DEL NODO tfd:TimbreFiscalDigital
                 tim_uuid = Convert.ToString(Timbrefiscal.Attribute("UUID").Value);
                 tim_fechatimbrado = Convert.ToDateTime(Timbrefiscal.Attribute("FechaTimbrado").Value);
-            }
-            catch (Exception ex)
-            {
-            }
+                //--------------------------------------------------------------------------------------------------------
+            //}
+            //catch (Exception ex)
+            //{
+            //}
         }
     }
 }
@@ -461,6 +594,6 @@ namespace FormPruebaXML
  * _________________________________________________________________________________________
  * 2.- ANALIZAR CONDICIONAMIENTO DE VARIABLES "TIPO DE CAMBIO" Y "FORMA DE PAGO" EN NODO COMPROBANTE
  * _________________________________________________________________________________________
- * 3.- TERMINAR DE CONDICIONAR LA EXTRACCION DE DATOS DEL PUNTO ANTERIOR
+ * 3.- REVISAR EL CODIGO Y VARIABLES PARA EL COMIENZO DE NUEVAS CONDICIONES Y ELIMINACION DE DATOS INNECESARIOS
  * _________________________________________________________________________________________
  */
