@@ -24,26 +24,33 @@ namespace FormPruebaXML
             OpenFileDialog buscar = new OpenFileDialog();
             buscar.Filter = "Archivos Xml (*.xml)|*.xml";
             buscar.Title = "archivos Xml";
+            buscar.Multiselect = true;
 
             if (buscar.ShowDialog() == DialogResult.OK)
             {
-                clsxml obj = new clsxml();
-                ruta = buscar.FileName;
-                textBox1.Text = ruta;
-                obj.get_data(ruta);
-                textBox2.Text = obj.comp_version;
-                textBox3.Text = obj.rec_rfc;
-                textBox4.Text = obj.rec_nombre;
-                textBox6.Text = obj.tim_uuid;
-                textBox7.Text = obj.comp_tipocomprobante;
-                textBox8.Text = obj.comp_serie;
-                textBox9.Text = obj.comp_folio;
-                textBox12.Text = obj.con_descripcion;
-                textBox17.Text = obj.imp_ret_isr_importe;
-                textBox16.Text = obj.imp_ret_isr_impuesto;
-                textBox19.Text = obj.imp_ret_iva_importe;
-                textBox18.Text = obj.imp_ret_iva_impuesto;
+                foreach (string r in buscar.FileNames) //MULTISELECCION DE ARCHIVOS DE FACTURA XML
+                {
+                    clsxml obj = new clsxml();
+                    ruta = r;
+                    textBox1.Text += ruta + "; ";
+                    obj.get_data(ruta);
+                    /*
+                    textBox2.Text = obj.comp_version;
+                    textBox3.Text = obj.rec_rfc;
+                    textBox4.Text = obj.rec_nombre;
+                    textBox6.Text = obj.tim_uuid;
+                    textBox7.Text = obj.comp_tipocomprobante;
+                    textBox8.Text = obj.comp_serie;
+                    textBox9.Text = obj.comp_folio;
+                    textBox12.Text = obj.con_descripcion;
+                    textBox17.Text = obj.imp_ret_isr_importe;
+                    textBox16.Text = obj.imp_ret_isr_impuesto;
+                    textBox19.Text = obj.imp_ret_iva_importe;
+                    textBox18.Text = obj.imp_ret_iva_impuesto;
+                    */
+                }
             }
+                
             buscar.Dispose();
         }
 
