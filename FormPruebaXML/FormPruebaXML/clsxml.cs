@@ -182,8 +182,8 @@ namespace FormPruebaXML
 
         public void get_data(string ruta)
         {
-            //try
-            //{
+            try
+            {
                 //CARGA DEL DOCUMENTO XML
                 XDocument documento = XDocument.Load(ruta);
 
@@ -470,13 +470,15 @@ namespace FormPruebaXML
                     //--------------------------------------------------------------------------------------------
 
                     /**********/XElement Nom_emisor = Nomina.Element(nomina12.GetName("Emisor"));
-                    //--------------ELEMENTOS DEL NODO Nomina12:Emisor (DENTRO DE Nomina12:Nomina)----------------
-                    emi_registropatronal = Convert.ToString(Nom_emisor.Attribute("RegistroPatronal").Value); //CONDICIONAR CON NULO
+                //--------------ELEMENTOS DEL NODO Nomina12:Emisor (DENTRO DE Nomina12:Nomina)----------------
+                    if (Nom_emisor.Attribute("RegistroPatronal") == null)
+                        emi_registropatronal = "-";
+                    else
+                        emi_registropatronal = Convert.ToString(Nom_emisor.Attribute("RegistroPatronal").Value); //CONDICIONAR CON NULO
                     //--------------------------------------------------------------------------------------------
 
                     /**********/XElement Nom_receptor = Nomina.Element(nomina12.GetName("Receptor"));
                     //--------------ELEMENTOS DEL NODO Nomina12:Receptor (DENTRO DE Nomina12:Nomina)--------------------
-                    // CONDICIONAR ESTE APARTADO CON VALORES NULOS (TODOS EN NODO RECEPTOR)
                     if (Nom_receptor.Attribute("Antigüedad") == null)
                         rec_antiguedad = "-";
                     else
@@ -579,11 +581,36 @@ namespace FormPruebaXML
                     //--------------------------ELEMENTOS DEL NODO Nomina12:Percepcion------------------------------------
                     foreach (XElement Per in Nom_percepciones.Elements("Percepcion"))
                     {
-                        per_clave += Convert.ToString(Per.Attribute("Clave").Value) + " * ";
-                        per_concepto += Convert.ToString(Per.Attribute("Concepto").Value) + " * ";
-                        per_importeexento += Convert.ToString(Per.Attribute("ImporteExento").Value) + " * ";
-                        per_importegravado += Convert.ToString(Per.Attribute("ImporteGravado").Value) + " * ";
-                        per_tipopercepcion += Convert.ToString(Per.Attribute("TipoPercepcion").Value) + " * ";
+                        switch (Convert.ToString(Per.Attribute("TipoPercepcion").Value))
+                        {
+                            case "001":
+                                per_clave += Convert.ToString(Per.Attribute("Clave").Value) + " * ";
+                                per_concepto += Convert.ToString(Per.Attribute("Concepto").Value) + " * ";
+                                per_importeexento += Convert.ToString(Per.Attribute("ImporteExento").Value) + " * ";
+                                per_importegravado += Convert.ToString(Per.Attribute("ImporteGravado").Value) + " * ";
+                                per_tipopercepcion += Convert.ToString(Per.Attribute("TipoPercepcion").Value) + " * ";
+                                break;
+                            case "002":
+                                per_clave += Convert.ToString(Per.Attribute("Clave").Value) + " * ";
+                                per_concepto += Convert.ToString(Per.Attribute("Concepto").Value) + " * ";
+                                per_importeexento += Convert.ToString(Per.Attribute("ImporteExento").Value) + " * ";
+                                per_importegravado += Convert.ToString(Per.Attribute("ImporteGravado").Value) + " * ";
+                                per_tipopercepcion += Convert.ToString(Per.Attribute("TipoPercepcion").Value) + " * ";
+                                break;
+                                /*continuar de este modo (ejemplo ilustrativo)(añadir variables por cada tipo de percepcion)
+                                 * 
+                                 * 
+                                 */
+                            default:
+                                per_clave = "-";
+                                per_concepto = "-";
+                                per_importeexento = "0.00";
+                                per_importegravado = "0.00";
+                                per_tipopercepcion = "-";
+                                // COLOCAR EN ESTE APRTADO LOS VALORES NULOS DE TODAS LAS VARIABLES CREADAS
+                                break;
+                        }
+                        
                     }
                     //---------------------------------------------------------------------------------------------------
 
@@ -598,10 +625,33 @@ namespace FormPruebaXML
                     // AGREGAR ESTRUCTURA FOREACH
                     foreach (XElement Ded in Nom_deducciones.Elements("Deduccion"))
                     {
-                        ded_clave += Convert.ToString(Ded.Attribute("Clave").Value) + " * ";
-                        ded_concepto += Convert.ToString(Ded.Attribute("Concepto").Value) + " * ";
-                        ded_importe += Convert.ToString(Ded.Attribute("Importe").Value) + " * ";
-                        ded_tipodeduccion += Convert.ToString(Ded.Attribute("TipoDeduccion").Value) + " * ";
+                        switch (Convert.ToString(Ded.Attribute("TipoDeduccion").Value))
+                        {
+                            case "001":
+                                ded_clave += Convert.ToString(Ded.Attribute("Clave").Value) + " * ";
+                                ded_concepto += Convert.ToString(Ded.Attribute("Concepto").Value) + " * ";
+                                ded_importe += Convert.ToString(Ded.Attribute("Importe").Value) + " * ";
+                                ded_tipodeduccion += Convert.ToString(Ded.Attribute("TipoDeduccion").Value) + " * ";
+                                break;
+                            case "002":
+                                ded_clave += Convert.ToString(Ded.Attribute("Clave").Value) + " * ";
+                                ded_concepto += Convert.ToString(Ded.Attribute("Concepto").Value) + " * ";
+                                ded_importe += Convert.ToString(Ded.Attribute("Importe").Value) + " * ";
+                                ded_tipodeduccion += Convert.ToString(Ded.Attribute("TipoDeduccion").Value) + " * ";
+                                break;
+                                /*continuar de este modo (ejemplo ilustrativo)(añadir variables por cada tipo de percepcion)
+                                * 
+                                * 
+                                */
+                            default:
+                                ded_clave = "-";
+                                ded_concepto = "-";
+                                ded_importe = "0.00";
+                                ded_tipodeduccion = "-";
+                                // COLOCAR EN ESTE APRTADO LOS VALORES NULOS DE TODAS LAS VARIABLES CREADAS
+                                break;
+                        }
+                        
                     }
                     //---------------------------------------------------------------------------------------------------
                 }
@@ -734,11 +784,11 @@ namespace FormPruebaXML
                 tim_uuid = Convert.ToString(Timbrefiscal.Attribute("UUID").Value);
                 tim_fechatimbrado = Convert.ToDateTime(Timbrefiscal.Attribute("FechaTimbrado").Value);
                 //--------------------------------------------------------------------------------------------------------
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show("Ha ocurrido un problema con la lectura del archivo. \nError tipo: " + ex.ToString());
-            //}
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ha ocurrido un problema con la lectura del archivo. \nError tipo: " + ex.ToString());
+            }
         }
     }
 }
