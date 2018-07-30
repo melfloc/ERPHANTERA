@@ -182,8 +182,8 @@ namespace FormPruebaXML
 
         public void get_data(string ruta)
         {
-            try
-            {
+            //try
+            //{
                 //CARGA DEL DOCUMENTO XML
                 XDocument documento = XDocument.Load(ruta);
 
@@ -477,24 +477,95 @@ namespace FormPruebaXML
                     /**********/XElement Nom_receptor = Nomina.Element(nomina12.GetName("Receptor"));
                     //--------------ELEMENTOS DEL NODO Nomina12:Receptor (DENTRO DE Nomina12:Nomina)--------------------
                     // CONDICIONAR ESTE APARTADO CON VALORES NULOS (TODOS EN NODO RECEPTOR)
-                    rec_antiguedad = Convert.ToString(Nom_receptor.Attribute("Antigüedad").Value);
-                    rec_banco = Convert.ToString(Nom_receptor.Attribute("Banco").Value);
-                    rec_claveEntFed = Convert.ToString(Nom_receptor.Attribute("ClaveEntFed").Value);
-                    rec_cuentabancaria = Convert.ToString(Nom_receptor.Attribute("CuentaBancaria").Value);
-                    rec_curp = Convert.ToString(Nom_receptor.Attribute("Curp").Value);
-                    rec_departamento = Convert.ToString(Nom_receptor.Attribute("Departamento").Value);
-                    rec_fechaIniLaboral = Convert.ToDateTime(Nom_receptor.Attribute("FechaInicioRelLaboral").Value);
-                    rec_numempleado = Convert.ToString(Nom_receptor.Attribute("NumEmpleado").Value);
-                    rec_numSegSoc = Convert.ToString(Nom_receptor.Attribute("NumSeguridadSocial").Value);
-                    rec_periodiPago = Convert.ToString(Nom_receptor.Attribute("PeriodicidadPago").Value);
-                    rec_puesto = Convert.ToString(Nom_receptor.Attribute("Puesto").Value);
-                    rec_riesgopuesto = Convert.ToString(Nom_receptor.Attribute("RiesgoPuesto").Value);
-                    rec_salariobaseCA = Convert.ToString(Nom_receptor.Attribute("SalarioBaseCotApor").Value);
-                    rec_salariodiarioInt = Convert.ToString(Nom_receptor.Attribute("SalarioDiarioIntegrado").Value);
-                    rec_sindicalizado = Convert.ToString(Nom_receptor.Attribute("Sindicalizado").Value);
-                    rec_tipocontrato = Convert.ToString(Nom_receptor.Attribute("TipoContrato").Value);
-                    rec_tipojornada = Convert.ToString(Nom_receptor.Attribute("TipoJornada").Value);
-                    rec_tiporegimen = Convert.ToString(Nom_receptor.Attribute("TipoRegimen").Value);
+                    if (Nom_receptor.Attribute("Antigüedad") == null)
+                        rec_antiguedad = "-";
+                    else
+                        rec_antiguedad = Convert.ToString(Nom_receptor.Attribute("Antigüedad").Value);
+
+                    if (Nom_receptor.Attribute("Banco") == null)
+                        rec_banco = "-";
+                    else
+                        rec_banco = Convert.ToString(Nom_receptor.Attribute("Banco").Value);
+
+                    if (Nom_receptor.Attribute("ClaveEntFed") == null)
+                        rec_claveEntFed = "-";
+                    else
+                        rec_claveEntFed = Convert.ToString(Nom_receptor.Attribute("ClaveEntFed").Value);
+
+                    if (Nom_receptor.Attribute("CuentaBancaria") == null)
+                        rec_cuentabancaria = "-";
+                    else
+                        rec_cuentabancaria = Convert.ToString(Nom_receptor.Attribute("CuentaBancaria").Value);
+
+                    if (Nom_receptor.Attribute("Curp") == null)
+                        rec_curp = "-";
+                    else
+                        rec_curp = Convert.ToString(Nom_receptor.Attribute("Curp").Value);
+
+                    if (Nom_receptor.Attribute("Departamento") == null)
+                        rec_departamento = "-";
+                    else
+                        rec_departamento = Convert.ToString(Nom_receptor.Attribute("Departamento").Value);
+
+                    if (Nom_receptor.Attribute("FechaInicioRelLaboral") == null)
+                        rec_fechaIniLaboral = new DateTime(0, 0, 0);
+                    else
+                        rec_fechaIniLaboral = Convert.ToDateTime(Nom_receptor.Attribute("FechaInicioRelLaboral").Value);
+
+                    if (Nom_receptor.Attribute("NumEmpleado") == null)
+                        rec_numempleado = "-";
+                    else
+                        rec_numempleado = Convert.ToString(Nom_receptor.Attribute("NumEmpleado").Value);
+
+                    if (Nom_receptor.Attribute("NumSeguridadSocial") == null)
+                        rec_numSegSoc = "-";
+                    else
+                        rec_numSegSoc = Convert.ToString(Nom_receptor.Attribute("NumSeguridadSocial").Value);
+
+                    if (Nom_receptor.Attribute("PeriodicidadPago") == null)
+                        rec_periodiPago = "-";
+                    else
+                        rec_periodiPago = Convert.ToString(Nom_receptor.Attribute("PeriodicidadPago").Value);
+
+                    if (Nom_receptor.Attribute("Puesto") == null)
+                        rec_puesto = "-";
+                    else
+                        rec_puesto = Convert.ToString(Nom_receptor.Attribute("Puesto").Value);
+
+                    if (Nom_receptor.Attribute("RiesgoPuesto") == null)
+                        rec_riesgopuesto = "-";
+                    else
+                        rec_riesgopuesto = Convert.ToString(Nom_receptor.Attribute("RiesgoPuesto").Value);
+
+                    if (Nom_receptor.Attribute("SalarioBaseCotApor") == null)
+                        rec_salariobaseCA = "0.00";
+                    else
+                        rec_salariobaseCA = Convert.ToString(Nom_receptor.Attribute("SalarioBaseCotApor").Value);
+
+                    if (Nom_receptor.Attribute("SalarioDiarioIntegrado") == null)
+                        rec_salariodiarioInt = "0.00";
+                    else
+                        rec_salariodiarioInt = Convert.ToString(Nom_receptor.Attribute("SalarioDiarioIntegrado").Value);
+
+                    if (Nom_receptor.Attribute("Sindicalizado") == null)
+                        rec_sindicalizado = "-";
+                    else
+                        rec_sindicalizado = Convert.ToString(Nom_receptor.Attribute("Sindicalizado").Value);
+
+                    if (Nom_receptor.Attribute("TipoContrato") == null)
+                        rec_tipocontrato = "-";
+                    else
+                        rec_tipocontrato = Convert.ToString(Nom_receptor.Attribute("TipoContrato").Value);
+
+                    if (Nom_receptor.Attribute("TipoJornada") == null)
+                        rec_tipojornada = "-";
+                    else
+                        rec_tipojornada = Convert.ToString(Nom_receptor.Attribute("TipoJornada").Value);
+
+                    if (Nom_receptor.Attribute("TipoRegimen") == null)
+                        rec_tiporegimen = "-";
+                    else
+                        rec_tiporegimen = Convert.ToString(Nom_receptor.Attribute("TipoRegimen").Value);
                     //---------------------------------------------------------------------------------------------------
 
                     /**********/XElement Nom_percepciones = Nomina.Element(nomina12.GetName("Percepciones"));
@@ -506,12 +577,14 @@ namespace FormPruebaXML
 
                     /**************/XElement Per_percepcion = Nom_percepciones.Element(nomina12.GetName("Percepcion"));
                     //--------------------------ELEMENTOS DEL NODO Nomina12:Percepcion------------------------------------
-                    // AGREGAR ESTRUCTURA FOREACH (concatenar resultados separados por un *)
-                    per_clave = Convert.ToString(Per_percepcion.Attribute("Clave").Value);
-                    per_concepto = Convert.ToString(Per_percepcion.Attribute("Concepto").Value);
-                    per_importeexento = Convert.ToString(Per_percepcion.Attribute("ImporteExento").Value);
-                    per_importegravado = Convert.ToString(Per_percepcion.Attribute("ImporteGravado").Value);
-                    per_tipopercepcion = Convert.ToString(Per_percepcion.Attribute("TipoPercepcion").Value);
+                    foreach (XElement Per in Nom_percepciones.Elements("Percepcion"))
+                    {
+                        per_clave += Convert.ToString(Per.Attribute("Clave").Value) + " * ";
+                        per_concepto += Convert.ToString(Per.Attribute("Concepto").Value) + " * ";
+                        per_importeexento += Convert.ToString(Per.Attribute("ImporteExento").Value) + " * ";
+                        per_importegravado += Convert.ToString(Per.Attribute("ImporteGravado").Value) + " * ";
+                        per_tipopercepcion += Convert.ToString(Per.Attribute("TipoPercepcion").Value) + " * ";
+                    }
                     //---------------------------------------------------------------------------------------------------
 
                     /**********/XElement Nom_deducciones = Nomina.Element(nomina12.GetName("Deducciones"));
@@ -523,21 +596,24 @@ namespace FormPruebaXML
                     /**************/XElement Ded_deduccion = Nom_deducciones.Element(nomina12.GetName("Deduccion"));
                     //------------------------------ELEMENTOS DEL NODO Nomina12:Deduccion--------------------------------
                     // AGREGAR ESTRUCTURA FOREACH
-                    ded_clave = Convert.ToString(Ded_deduccion.Attribute("Clave").Value);
-                    ded_concepto = Convert.ToString(Ded_deduccion.Attribute("Concepto").Value);
-                    ded_importe = Convert.ToString(Ded_deduccion.Attribute("Importe").Value);
-                    ded_tipodeduccion = Convert.ToString(Ded_deduccion.Attribute("TipoDeduccion").Value);
+                    foreach (XElement Ded in Nom_deducciones.Elements("Deduccion"))
+                    {
+                        ded_clave += Convert.ToString(Ded.Attribute("Clave").Value) + " * ";
+                        ded_concepto += Convert.ToString(Ded.Attribute("Concepto").Value) + " * ";
+                        ded_importe += Convert.ToString(Ded.Attribute("Importe").Value) + " * ";
+                        ded_tipodeduccion += Convert.ToString(Ded.Attribute("TipoDeduccion").Value) + " * ";
+                    }
                     //---------------------------------------------------------------------------------------------------
                 }
                 else
                 {
                     //--------------------------ELEMENTOS DEL NODO Nomina12:Nomina--------------------------------
 
-                    //FECHAS NULAS = "-/-/-" (INVESTIGAR SI ES POSIBLE (PARA TODAS))
+                    //FECHAS NULAS = ??? (INVESTIGAR SI ES POSIBLE)
 
-                    nom_fechIniPago = Convert.ToDateTime("-/-/-");      //Pendiente
-                    nom_fechapago = new DateTime(1999, 01, 01);
-                    nom_fechFinalPago = new DateTime(1999, 01, 01);
+                    nom_fechIniPago = new DateTime(0,0,0);      //Pendiente
+                    nom_fechapago = new DateTime(0,0,0);
+                    nom_fechFinalPago = new DateTime(0,0,0);
                     nom_numdiaspagados = "0.00";
                     nom_tiponomina = "-";
                     nom_totaldeducciones = "0.00";
@@ -555,7 +631,7 @@ namespace FormPruebaXML
                     rec_cuentabancaria = "-";
                     rec_curp = "-";
                     rec_departamento = "-";
-                    rec_fechaIniLaboral = new DateTime(1999, 01, 01);
+                    rec_fechaIniLaboral = new DateTime(0,0,0);
                     rec_numempleado = "-";
                     rec_numSegSoc = "-";
                     rec_periodiPago = "-";
@@ -629,7 +705,7 @@ namespace FormPruebaXML
                 else
                 {
                     //---------------------------------ELEMENTOS DEL NODO Pago10:Pago-------------------------------------
-                    pag_fechaPago = new DateTime(1991, 01, 01);
+                    pag_fechaPago = new DateTime(0,0,0);
                     pag_formaPagoP = "-";
                     pag_monedaP = "-";
                     pag_monto = "0.00";
@@ -658,10 +734,11 @@ namespace FormPruebaXML
                 tim_uuid = Convert.ToString(Timbrefiscal.Attribute("UUID").Value);
                 tim_fechatimbrado = Convert.ToDateTime(Timbrefiscal.Attribute("FechaTimbrado").Value);
                 //--------------------------------------------------------------------------------------------------------
-            }
-            catch (Exception ex)
-            {
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show("Ha ocurrido un problema con la lectura del archivo. \nError tipo: " + ex.ToString());
+            //}
         }
     }
 }

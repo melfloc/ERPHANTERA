@@ -34,6 +34,7 @@ namespace FormPruebaXML
                     ruta = r;
                     textBox1.Text += ruta + "; ";
                     obj.get_data(ruta);
+                    textBox1.Text = obj.comp_fecha.ToString();
                     /*
                     textBox2.Text = obj.comp_version;
                     textBox3.Text = obj.rec_rfc;
