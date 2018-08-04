@@ -631,9 +631,15 @@ namespace FormPruebaXML
                                 ded_clave += Convert.ToString(Ded.Attribute("Clave").Value) + " * ";
                                 ded_concepto += Convert.ToString(Ded.Attribute("Concepto").Value) + " * ";
                                 ded_importe += Convert.ToString(Ded.Attribute("Importe").Value) + " * ";
-                                ded_tipodeduccion += Convert.ToString(Ded.Attribute("TipoDeduccion").Value) + " * ";
+                                ded_tipodeduccio += Convert.ToString(Ded.Attribute("TipoDeduccion").Value) + " * ";
                                 break;
                             case "002":
+                                ded_clave += Convert.ToString(Ded.Attribute("Clave").Value) + " * ";
+                                ded_concepto += Convert.ToString(Ded.Attribute("Concepto").Value) + " * ";
+                                ded_importe += Convert.ToString(Ded.Attribute("Importe").Value) + " * ";
+                                ded_tipodeduccion += Convert.ToString(Ded.Attribute("TipoDeduccion").Value) + " * ";
+                                break;
+                            case "003":
                                 ded_clave += Convert.ToString(Ded.Attribute("Clave").Value) + " * ";
                                 ded_concepto += Convert.ToString(Ded.Attribute("Concepto").Value) + " * ";
                                 ded_importe += Convert.ToString(Ded.Attribute("Importe").Value) + " * ";
