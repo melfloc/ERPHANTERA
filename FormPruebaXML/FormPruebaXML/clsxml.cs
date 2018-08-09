@@ -48,6 +48,8 @@ namespace FormPruebaXML
         public string rec_rfc;
         public string rec_nombre;
         public string rec_usocfdi;
+        public string rec_resifiscal;
+        public string rec_numregidtrib;
 
         //VARIABLES GLOBALES PARA NODO cfdi:Concepto
         public string con_claveprodserv;
@@ -154,10 +156,18 @@ namespace FormPruebaXML
         public string ded_totalOtDed;
 
         //VARIABLES GLOBALES PARA NODO Nomina12:Deduccion
-        public string ded_clave;
-        public string ded_concepto;
-        public string ded_importe;
-        public string ded_tipodeduccion;
+        public string ded_001_clave;
+        public string ded_001_concepto;
+        public string ded_001_importe;
+        public string ded_001_tipodeduccion;
+        public string ded_002_clave;
+        public string ded_002_concepto;
+        public string ded_002_importe;
+        public string ded_002_tipodeduccion;
+        public string ded_003_clave;
+        public string ded_003_concepto;
+        public string ded_003_importe;
+        public string ded_003_tipodeduccion;
 
         //VARIABLES GLOBALES PARA NODO Pago10:Pago
         public DateTime pag_fechaPago;
@@ -254,6 +264,10 @@ namespace FormPruebaXML
                 /**/XElement Receptor = Comprobante.Element(cfdi.GetName("Receptor"));
                 //------------------------------ELEMENTOS DEL NODO cfdi:Receptor-------------------------------
                 rec_rfc = Convert.ToString(Receptor.Attribute("Rfc").Value);
+
+                rec_resifiscal = Convert.ToString(Receptor.Attribute("ResidenciaFiscal").Value);
+
+                rec_numregidtrib = Convert.ToString(Receptor.Attribute("NumRegIdTrib").Value);
 
                 if (Receptor.Attribute("Nombre") == null)
                     rec_nombre = "-";
@@ -475,7 +489,7 @@ namespace FormPruebaXML
                     //--------------------------------------------------------------------------------------------
 
                     /**********/XElement Nom_emisor = Nomina.Element(nomina12.GetName("Emisor"));
-                //--------------ELEMENTOS DEL NODO Nomina12:Emisor (DENTRO DE Nomina12:Nomina)----------------
+                    //--------------ELEMENTOS DEL NODO Nomina12:Emisor (DENTRO DE Nomina12:Nomina)----------------
                     if (Nom_emisor.Attribute("RegistroPatronal") == null)
                         emi_registropatronal = "-";
                     else
@@ -607,11 +621,16 @@ namespace FormPruebaXML
                                  * 
                                  */
                             default:
-                                per_clave = "-";
-                                per_concepto = "-";
-                                per_importeexento = "0.00";
-                                per_importegravado = "0.00";
-                                per_tipopercepcion = "-";
+                                per_001_clave = "-";
+                                per_001_concepto = "-";
+                                per_001_importeexento = "0.00";
+                                per_001_importegravado = "0.00";
+                                per_001_tipopercepcion = "-";
+                                per_002_clave = "-";
+                                per_002_concepto = "-";
+                                per_002_importeexento = "0.00";
+                                per_002_importegravado = "0.00";
+                                per_002_tipopercepcion = "-";
                                 // COLOCAR EN ESTE APRTADO LOS VALORES NULOS DE TODAS LAS VARIABLES CREADAS
                                 break;
                         }
@@ -627,38 +646,45 @@ namespace FormPruebaXML
 
                     /**************/XElement Ded_deduccion = Nom_deducciones.Element(nomina12.GetName("Deduccion"));
                     //------------------------------ELEMENTOS DEL NODO Nomina12:Deduccion--------------------------------
-                    // AGREGAR ESTRUCTURA FOREACH
                     foreach (XElement Ded in Nom_deducciones.Elements("Deduccion"))
                     {
                         switch (Convert.ToString(Ded.Attribute("TipoDeduccion").Value))
                         {
                             case "001":
-                                ded_clave += Convert.ToString(Ded.Attribute("Clave").Value) + " * ";
-                                ded_concepto += Convert.ToString(Ded.Attribute("Concepto").Value) + " * ";
-                                ded_importe += Convert.ToString(Ded.Attribute("Importe").Value) + " * ";
-                                ded_tipodeduccio += Convert.ToString(Ded.Attribute("TipoDeduccion").Value) + " * ";
+                                ded_001_clave += Convert.ToString(Ded.Attribute("Clave").Value) + " * ";
+                                ded_001_concepto += Convert.ToString(Ded.Attribute("Concepto").Value) + " * ";
+                                ded_001_importe += Convert.ToString(Ded.Attribute("Importe").Value) + " * ";
+                                ded_001_tipodeduccion += Convert.ToString(Ded.Attribute("TipoDeduccion").Value) + " * ";
                                 break;
                             case "002":
-                                ded_clave += Convert.ToString(Ded.Attribute("Clave").Value) + " * ";
-                                ded_concepto += Convert.ToString(Ded.Attribute("Concepto").Value) + " * ";
-                                ded_importe += Convert.ToString(Ded.Attribute("Importe").Value) + " * ";
-                                ded_tipodeduccion += Convert.ToString(Ded.Attribute("TipoDeduccion").Value) + " * ";
+                                ded_002_clave += Convert.ToString(Ded.Attribute("Clave").Value) + " * ";
+                                ded_002_concepto += Convert.ToString(Ded.Attribute("Concepto").Value) + " * ";
+                                ded_002_importe += Convert.ToString(Ded.Attribute("Importe").Value) + " * ";
+                                ded_002_tipodeduccion += Convert.ToString(Ded.Attribute("TipoDeduccion").Value) + " * ";
                                 break;
                             case "003":
-                                ded_clave += Convert.ToString(Ded.Attribute("Clave").Value) + " * ";
-                                ded_concepto += Convert.ToString(Ded.Attribute("Concepto").Value) + " * ";
-                                ded_importe += Convert.ToString(Ded.Attribute("Importe").Value) + " * ";
-                                ded_tipodeduccion += Convert.ToString(Ded.Attribute("TipoDeduccion").Value) + " * ";
+                                ded_003_clave += Convert.ToString(Ded.Attribute("Clave").Value) + " * ";
+                                ded_003_concepto += Convert.ToString(Ded.Attribute("Concepto").Value) + " * ";
+                                ded_003_importe += Convert.ToString(Ded.Attribute("Importe").Value) + " * ";
+                                ded_003_tipodeduccion += Convert.ToString(Ded.Attribute("TipoDeduccion").Value) + " * ";
                                 break;
                                 /*continuar de este modo (ejemplo ilustrativo)(añadir variables por cada tipo de percepcion)
                                 * 
                                 * 
                                 */
                             default:
-                                ded_clave = "-";
-                                ded_concepto = "-";
-                                ded_importe = "0.00";
-                                ded_tipodeduccion = "-";
+                                ded_001_clave = "-";
+                                ded_001_concepto = "-";
+                                ded_001_importe = "0.00";
+                                ded_001_tipodeduccion = "-";
+                                ded_002_clave = "-";
+                                ded_002_concepto = "-";
+                                ded_002_importe = "0.00";
+                                ded_002_tipodeduccion = "-";
+                                ded_003_clave = "-";
+                                ded_003_concepto = "-";
+                                ded_003_importe = "0.00";
+                                ded_003_tipodeduccion = "-";
                                 // COLOCAR EN ESTE APRTADO LOS VALORES NULOS DE TODAS LAS VARIABLES CREADAS
                                 break;
                         }
@@ -712,24 +738,9 @@ namespace FormPruebaXML
                     per_totalsueldos = "0.00";
                     //---------------------------------------------------------------------------------------------------
 
-                    //--------------------------ELEMENTOS DEL NODO Nomina12:Percepcion------------------------------------
-                    per_clave = "-";
-                    per_concepto = "-";
-                    per_importeexento = "0.00";
-                    per_importegravado = "0.00";
-                    per_tipopercepcion = "-";
-                    //---------------------------------------------------------------------------------------------------
-
                     //---------------------------ELEMENTOS DEL NODO Nomina12:Deducciones---------------------------------
                     ded_totalImpRet = "0.00";
                     ded_totalOtDed = "0.00";
-                    //---------------------------------------------------------------------------------------------------
-
-                    //------------------------------ELEMENTOS DEL NODO Nomina12:Deduccion--------------------------------
-                    ded_clave = "-";
-                    ded_concepto = "-";
-                    ded_importe = "0.00";
-                    ded_tipodeduccion = "0.00";
                     //---------------------------------------------------------------------------------------------------
                 }
 
