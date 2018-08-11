@@ -603,23 +603,51 @@ namespace FormPruebaXML
                         switch (Convert.ToString(Per.Attribute("TipoPercepcion").Value))
                         {
                             case "001":
-                                per_001_clave += Convert.ToString(Per.Attribute("Clave").Value) + " * ";
-                                per_001_concepto += Convert.ToString(Per.Attribute("Concepto").Value) + " * ";
                                 per_001_importeexento += Convert.ToString(Per.Attribute("ImporteExento").Value) + " * ";
                                 per_001_importegravado += Convert.ToString(Per.Attribute("ImporteGravado").Value) + " * ";
-                                per_001_tipopercepcion += Convert.ToString(Per.Attribute("TipoPercepcion").Value) + " * ";
                                 break;
                             case "002":
-                                per_002_clave += Convert.ToString(Per.Attribute("Clave").Value) + " * ";
-                                per_002_concepto += Convert.ToString(Per.Attribute("Concepto").Value) + " * ";
                                 per_002_importeexento += Convert.ToString(Per.Attribute("ImporteExento").Value) + " * ";
                                 per_002_importegravado += Convert.ToString(Per.Attribute("ImporteGravado").Value) + " * ";
-                                per_002_tipopercepcion += Convert.ToString(Per.Attribute("TipoPercepcion").Value) + " * ";
                                 break;
-                                /*continuar de este modo (ejemplo ilustrativo)(añadir variables por cada tipo de percepcion)
-                                 * 
-                                 * 
-                                 */
+                            case "003":
+                                per_003_importeexento += Convert.ToString(Per.Attribute("ImporteExento").Value) + " * ";
+                                per_003_importegravado += Convert.ToString(Per.Attribute("ImporteGravado").Value) + " * ";
+                                break;
+                            case "004":
+                                per_004_importeexento += Convert.ToString(Per.Attribute("ImporteExento").Value) + " * ";
+                                per_004_importegravado += Convert.ToString(Per.Attribute("ImporteGravado").Value) + " * ";
+                            case "005":
+                                per_005_importeexento += Convert.ToString(Per.Attribute("ImporteExento").Value) + " * ";
+                                per_005_importegravado += Convert.ToString(Per.Attribute("ImporteGravado").Value) + " * ";
+                                break;
+                            case "006":
+                                per_006_importeexento += Convert.ToString(Per.Attribute("ImporteExento").Value) + " * ";
+                                per_006_importegravado += Convert.ToString(Per.Attribute("ImporteGravado").Value) + " * ";
+                                break
+                            case "007":
+                                per_007_importeexento += Convert.ToString(Per.Attribute("ImporteExento").Value) + " * ";
+                                per_007_importegravado += Convert.ToString(Per.Attribute("ImporteGravado").Value) + " * ";
+                                break;
+                            case "008":
+                                per_008_importeexento += Convert.ToString(Per.Attribute("ImporteExento").Value) + " * ";
+                                per_008_importegravado += Convert.ToString(Per.Attribute("ImporteGravado").Value) + " * ";
+                                break;
+                            case "009":
+                                per_009_importeexento += Convert.ToString(Per.Attribute("ImporteExento").Value) + " * ";
+                                per_009_importegravado += Convert.ToString(Per.Attribute("ImporteGravado").Value) + " * ";
+                                break;
+                            case "010":
+                                per_010_importeexento += Convert.ToString(Per.Attribute("ImporteExento").Value) + " * ";
+                                per_010_importegravado += Convert.ToString(Per.Attribute("ImporteGravado").Value) + " * ";
+                            case "011":
+                                per_011_importeexento += Convert.ToString(Per.Attribute("ImporteExento").Value) + " * ";
+                                per_011_importegravado += Convert.ToString(Per.Attribute("ImporteGravado").Value) + " * ";
+                                break;
+                            case "012":
+                                per_012_importeexento += Convert.ToString(Per.Attribute("ImporteExento").Value) + " * ";
+                                per_012_importegravado += Convert.ToString(Per.Attribute("ImporteGravado").Value) + " * ";
+                                break
                             default:
                                 per_001_clave = "-";
                                 per_001_concepto = "-";
