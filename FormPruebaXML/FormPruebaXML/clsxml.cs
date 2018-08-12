@@ -654,6 +654,7 @@ namespace FormPruebaXML
                     nom_tiponomina = Convert.ToString(Nomina.Attribute("TipoNomina").Value);
                     nom_totaldeducciones = Convert.ToString(Nomina.Attribute("TotalDeducciones").Value);
                     nom_totalpercepciones = Convert.ToString(Nomina.Attribute("TotalPercepciones").Value);
+                    nom_totalOtrosPagos = Convert.ToString(Nomina.Attribute("TotalOtrosPagos").Value);
                     //--------------------------------------------------------------------------------------------
 
                     /**********/XElement Nom_emisor = Nomina.Element(nomina12.GetName("Emisor"));
@@ -1475,10 +1476,11 @@ namespace FormPruebaXML
                         
                     }
                     //---------------------------------------------------------------------------------------------------
-                    /**************/XElement OtPa = Nom_percepciones.Element(nomina12.GetName("OtroPago"));
+                    /**************/XElement Nom_OtroPagos = Nomina.Element(nomina12.GetName("OtroPagos"));
+
                     //--------------------------ELEMENTOS DEL NODO Nomina12:OtroPago------------------------------------
                     //--------REVISAR SI EL NODO OTRO PAGO ESTA CORRECTAMENTE ESTRUCTURADO------------------------------
-                    foreach (XElement Per in Nom_percepciones.Elements("OtroPago"))
+                    foreach (XElement Per in Nom_OtroPagos.Elements("OtroPago"))
                     {
                         switch (Convert.ToString(Per.Attribute("TipoOtroPago").Value))
                         {
@@ -1544,8 +1546,7 @@ namespace FormPruebaXML
                     rec_numSegSoc = "-";
                     rec_periodiPago = "-";
                     rec_puesto = "-";
-                    rec_riesgopuesto = "-";
-                    rec_salariobaseCA = "-";
+                    rec_riesgopuesto = "-";                    rec_salariobaseCA = "-";
                     rec_salariodiarioInt = "-";
                     rec_sindicalizado = "-";
                     rec_tipocontrato = "-";
