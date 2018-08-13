@@ -34,8 +34,6 @@ namespace FormPruebaXML
                     ruta = r;
                     textBox1.Text += ruta + "; ";
                     obj.get_data(ruta);
-                    textBox1.Text = obj.comp_fecha.ToString();
-                    /*
                     textBox2.Text = obj.comp_version;
                     textBox3.Text = obj.rec_rfc;
                     textBox4.Text = obj.rec_nombre;
@@ -48,7 +46,6 @@ namespace FormPruebaXML
                     textBox16.Text = obj.imp_ret_isr_impuesto;
                     textBox19.Text = obj.imp_ret_iva_importe;
                     textBox18.Text = obj.imp_ret_iva_impuesto;
-                    */
                 }
             }
                 

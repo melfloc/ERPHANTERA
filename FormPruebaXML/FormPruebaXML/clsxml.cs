@@ -24,10 +24,10 @@ namespace FormPruebaXML
         //###################### DECLARACION DE VARIABLES GLOBALES #############################
         //REVISAR**
         //VARIABLES GLOBALES DEL NODO cfdi:Comprobante
-        public string comp_version;
-        public string comp_serie;
-        public string comp_folio;
-        public DateTime comp_fecha;
+        public string comp_version = "-";
+        public string comp_serie = "-";
+        public string comp_folio = "-";
+        public DateTime? comp_fecha;
         public string comp_formapago;
         public string comp_condpago;
         public string comp_subtotal;
@@ -103,13 +103,14 @@ namespace FormPruebaXML
         public string imp_ret_ieps_importe;
 
         //VARIABLES GLOBALES PARA NODO Nomina12:Nomina
-        public DateTime nom_fechIniPago;
-        public DateTime nom_fechFinalPago;
-        public DateTime nom_fechapago;
+        public DateTime? nom_fechIniPago;
+        public DateTime? nom_fechFinalPago;
+        public DateTime? nom_fechapago;
         public string nom_numdiaspagados;
         public string nom_tiponomina;
         public string nom_totaldeducciones;
         public string nom_totalpercepciones;
+        public string nom_totalotrospagos;
 
         //VARIABLES GLOBALES PARA NODO Nomina12:Emisor (DENTRO DE Nomina12:Nomina)
         public string emi_registropatronal;
@@ -121,7 +122,7 @@ namespace FormPruebaXML
         public string rec_cuentabancaria;
         public string rec_curp;
         public string rec_departamento;
-        public DateTime rec_fechaIniLaboral;
+        public DateTime? rec_fechaIniLaboral;
         public string rec_numempleado;
         public string rec_numSegSoc;
         public string rec_periodiPago;
@@ -180,6 +181,26 @@ namespace FormPruebaXML
         public string per_019_importegravado;
         public string per_020_importeexento;
         public string per_020_importegravado;
+        public string per_021_importeexento;
+        public string per_021_importegravado;
+        public string per_022_importeexento;
+        public string per_022_importegravado;
+        public string per_023_importeexento;
+        public string per_023_importegravado;
+        public string per_024_importeexento;
+        public string per_024_importegravado;
+        public string per_025_importeexento;
+        public string per_025_importegravado;
+        public string per_026_importeexento;
+        public string per_026_importegravado;
+        public string per_027_importeexento;
+        public string per_027_importegravado;
+        public string per_028_importegravado;
+        public string per_028_importeexento;
+        public string per_029_importegravado;
+        public string per_029_importeexento;
+        public string per_030_importegravado;
+        public string per_030_importeexento;
         public string per_031_importeexento;
         public string per_031_importegravado;
         public string per_032_importeexento;
@@ -338,7 +359,7 @@ namespace FormPruebaXML
 
         
         //VARIABLES GLOBALES PARA NODO Pago10:Pago
-        public DateTime pag_fechaPago;
+        public DateTime? pag_fechaPago;
         public string pag_formaPagoP;
         public string pag_monedaP;
         public string pag_monto;
@@ -361,7 +382,7 @@ namespace FormPruebaXML
 
         //VARIABLES GLOBALES PARA NODO tfd:TimbreFiscalDigital
         public string tim_uuid;
-        public DateTime tim_fechatimbrado;
+        public DateTime? tim_fechatimbrado;
 
         public void get_data(string ruta)
         {
@@ -408,7 +429,7 @@ namespace FormPruebaXML
                     comp_descuento = Convert.ToString(Comprobante.Attribute("Descuento").Value);
 
                 comp_moneda = Convert.ToString(Comprobante.Attribute("Moneda").Value);
-
+    
                 if (Comprobante.Attribute("TipoDeCambio") == null)
                     comp_tipodecambio = "1.00";
                 else
@@ -433,9 +454,15 @@ namespace FormPruebaXML
                 //------------------------------ELEMENTOS DEL NODO cfdi:Receptor-------------------------------
                 rec_rfc = Convert.ToString(Receptor.Attribute("Rfc").Value);
 
-                rec_resifiscal = Convert.ToString(Receptor.Attribute("ResidenciaFiscal").Value);
+                if (Receptor.Attribute("ResidenciaFiscal") == null)
+                    rec_resifiscal = "-";
+                else
+                    rec_resifiscal = Convert.ToString(Receptor.Attribute("ResidenciaFiscal").Value);
 
-                rec_numregidtrib = Convert.ToString(Receptor.Attribute("NumRegIdTrib").Value);
+                if (Receptor.Attribute("NumRegIdTrib") == null)
+                    rec_numregidtrib = "-";
+                else
+                    rec_numregidtrib = Convert.ToString(Receptor.Attribute("NumRegIdTrib").Value);
 
                 if (Receptor.Attribute("Nombre") == null)
                     rec_nombre = "-";
@@ -654,7 +681,11 @@ namespace FormPruebaXML
                     nom_tiponomina = Convert.ToString(Nomina.Attribute("TipoNomina").Value);
                     nom_totaldeducciones = Convert.ToString(Nomina.Attribute("TotalDeducciones").Value);
                     nom_totalpercepciones = Convert.ToString(Nomina.Attribute("TotalPercepciones").Value);
-                    nom_totalOtrosPagos = Convert.ToString(Nomina.Attribute("TotalOtrosPagos").Value);
+
+                    if (Nomina.Attribute("TotalOtrosPagos") == null)
+                        nom_totalotrospagos = "0.00";
+                    else
+                        nom_totalotrospagos = Convert.ToString(Nomina.Attribute("TotalOtrosPagos").Value);
                     //--------------------------------------------------------------------------------------------
 
                     /**********/XElement Nom_emisor = Nomina.Element(nomina12.GetName("Emisor"));
@@ -786,6 +817,7 @@ namespace FormPruebaXML
                             case "004":
                                 per_004_importeexento += Convert.ToString(Per.Attribute("ImporteExento").Value) + " * ";
                                 per_004_importegravado += Convert.ToString(Per.Attribute("ImporteGravado").Value) + " * ";
+                                break;
                             case "005":
                                 per_005_importeexento += Convert.ToString(Per.Attribute("ImporteExento").Value) + " * ";
                                 per_005_importegravado += Convert.ToString(Per.Attribute("ImporteGravado").Value) + " * ";
@@ -793,7 +825,7 @@ namespace FormPruebaXML
                             case "006":
                                 per_006_importeexento += Convert.ToString(Per.Attribute("ImporteExento").Value) + " * ";
                                 per_006_importegravado += Convert.ToString(Per.Attribute("ImporteGravado").Value) + " * ";
-                                break
+                                break;
                             case "007":
                                 per_007_importeexento += Convert.ToString(Per.Attribute("ImporteExento").Value) + " * ";
                                 per_007_importegravado += Convert.ToString(Per.Attribute("ImporteGravado").Value) + " * ";
@@ -809,7 +841,7 @@ namespace FormPruebaXML
                             case "010":
                                 per_010_importeexento += Convert.ToString(Per.Attribute("ImporteExento").Value) + " * ";
                                 per_010_importegravado += Convert.ToString(Per.Attribute("ImporteGravado").Value) + " * ";
-                                break
+                                break;
                             case "011":
                                 per_011_importeexento += Convert.ToString(Per.Attribute("ImporteExento").Value) + " * ";
                                 per_011_importegravado += Convert.ToString(Per.Attribute("ImporteGravado").Value) + " * ";
@@ -817,10 +849,11 @@ namespace FormPruebaXML
                             case "012":
                                 per_012_importeexento += Convert.ToString(Per.Attribute("ImporteExento").Value) + " * ";
                                 per_012_importegravado += Convert.ToString(Per.Attribute("ImporteGravado").Value) + " * ";
-                                break
+                                break;
                             case "013":
                                 per_013_importeexento += Convert.ToString(Per.Attribute("ImporteExento").Value) + " * ";
                                 per_013_importegravado += Convert.ToString(Per.Attribute("ImporteGravado").Value) + " * ";
+                                break;
                             case "014":
                                 per_014_importeexento += Convert.ToString(Per.Attribute("ImporteExento").Value) + " * ";
                                 per_014_importegravado += Convert.ToString(Per.Attribute("ImporteGravado").Value) + " * ";
@@ -828,7 +861,7 @@ namespace FormPruebaXML
                             case "015":
                                 per_015_importeexento += Convert.ToString(Per.Attribute("ImporteExento").Value) + " * ";
                                 per_015_importegravado += Convert.ToString(Per.Attribute("ImporteGravado").Value) + " * ";
-                                break
+                                break;
                             case "016":
                                 per_016_importeexento += Convert.ToString(Per.Attribute("ImporteExento").Value) + " * ";
                                 per_016_importegravado += Convert.ToString(Per.Attribute("ImporteGravado").Value) + " * ";
@@ -844,6 +877,7 @@ namespace FormPruebaXML
                             case "019":
                                 per_019_importeexento += Convert.ToString(Per.Attribute("ImporteExento").Value) + " * ";
                                 per_019_importegravado += Convert.ToString(Per.Attribute("ImporteGravado").Value) + " * ";
+                                break;
                             case "020":
                                 per_020_importeexento += Convert.ToString(Per.Attribute("ImporteExento").Value) + " * ";
                                 per_020_importegravado += Convert.ToString(Per.Attribute("ImporteGravado").Value) + " * ";
@@ -851,7 +885,7 @@ namespace FormPruebaXML
                             case "021":
                                 per_021_importeexento += Convert.ToString(Per.Attribute("ImporteExento").Value) + " * ";
                                 per_021_importegravado += Convert.ToString(Per.Attribute("ImporteGravado").Value) + " * ";
-                                break
+                                break;
                             case "022":
                                 per_022_importeexento += Convert.ToString(Per.Attribute("ImporteExento").Value) + " * ";
                                 per_022_importegravado += Convert.ToString(Per.Attribute("ImporteGravado").Value) + " * ";
@@ -867,7 +901,7 @@ namespace FormPruebaXML
                             case "025":
                                 per_025_importeexento += Convert.ToString(Per.Attribute("ImporteExento").Value) + " * ";
                                 per_025_importegravado += Convert.ToString(Per.Attribute("ImporteGravado").Value) + " * ";
-                                break
+                                break;
                             case "026":
                                 per_026_importeexento += Convert.ToString(Per.Attribute("ImporteExento").Value) + " * ";
                                 per_026_importegravado += Convert.ToString(Per.Attribute("ImporteGravado").Value) + " * ";
@@ -883,6 +917,7 @@ namespace FormPruebaXML
                             case "029":
                                 per_029_importeexento += Convert.ToString(Per.Attribute("ImporteExento").Value) + " * ";
                                 per_029_importegravado += Convert.ToString(Per.Attribute("ImporteGravado").Value) + " * ";
+                                break;
                             case "030":
                                 per_030_importeexento += Convert.ToString(Per.Attribute("ImporteExento").Value) + " * ";
                                 per_030_importegravado += Convert.ToString(Per.Attribute("ImporteGravado").Value) + " * ";
@@ -890,7 +925,7 @@ namespace FormPruebaXML
                             case "031":
                                 per_031_importeexento += Convert.ToString(Per.Attribute("ImporteExento").Value) + " * ";
                                 per_031_importegravado += Convert.ToString(Per.Attribute("ImporteGravado").Value) + " * ";
-                                break
+                                break;
                             case "032":
                                 per_032_importeexento += Convert.ToString(Per.Attribute("ImporteExento").Value) + " * ";
                                 per_032_importegravado += Convert.ToString(Per.Attribute("ImporteGravado").Value) + " * ";
@@ -906,7 +941,7 @@ namespace FormPruebaXML
                             case "035":
                                 per_035_importeexento += Convert.ToString(Per.Attribute("ImporteExento").Value) + " * ";
                                 per_035_importegravado += Convert.ToString(Per.Attribute("ImporteGravado").Value) + " * ";
-                                break
+                                break;
                             case "036":
                                 per_036_importeexento += Convert.ToString(Per.Attribute("ImporteExento").Value) + " * ";
                                 per_036_importegravado += Convert.ToString(Per.Attribute("ImporteGravado").Value) + " * ";
@@ -914,10 +949,11 @@ namespace FormPruebaXML
                             case "037":
                                 per_037_importeexento += Convert.ToString(Per.Attribute("ImporteExento").Value) + " * ";
                                 per_037_importegravado += Convert.ToString(Per.Attribute("ImporteGravado").Value) + " * ";
-                                break
+                                break;
                             case "038":
                                 per_038_importeexento += Convert.ToString(Per.Attribute("ImporteExento").Value) + " * ";
                                 per_038_importegravado += Convert.ToString(Per.Attribute("ImporteGravado").Value) + " * ";
+                                break;
                             case "039":
                                 per_039_importeexento += Convert.ToString(Per.Attribute("ImporteExento").Value) + " * ";
                                 per_039_importegravado += Convert.ToString(Per.Attribute("ImporteGravado").Value) + " * ";
@@ -925,7 +961,7 @@ namespace FormPruebaXML
                             case "040":
                                 per_040_importeexento += Convert.ToString(Per.Attribute("ImporteExento").Value) + " * ";
                                 per_040_importegravado += Convert.ToString(Per.Attribute("ImporteGravado").Value) + " * ";
-                                break
+                                break;
                             case "041":
                                 per_041_importeexento += Convert.ToString(Per.Attribute("ImporteExento").Value) + " * ";
                                 per_041_importegravado += Convert.ToString(Per.Attribute("ImporteGravado").Value) + " * ";
@@ -941,6 +977,7 @@ namespace FormPruebaXML
                             case "044":
                                 per_044_importeexento += Convert.ToString(Per.Attribute("ImporteExento").Value) + " * ";
                                 per_044_importegravado += Convert.ToString(Per.Attribute("ImporteGravado").Value) + " * ";
+                                break;
                             case "045":
                                 per_045_importeexento += Convert.ToString(Per.Attribute("ImporteExento").Value) + " * ";
                                 per_045_importegravado += Convert.ToString(Per.Attribute("ImporteGravado").Value) + " * ";
@@ -948,7 +985,7 @@ namespace FormPruebaXML
                             case "046":
                                 per_046_importeexento += Convert.ToString(Per.Attribute("ImporteExento").Value) + " * ";
                                 per_046_importegravado += Convert.ToString(Per.Attribute("ImporteGravado").Value) + " * ";
-                                break
+                                break;
                             case "047":
                                 per_047_importeexento += Convert.ToString(Per.Attribute("ImporteExento").Value) + " * ";
                                 per_047_importegravado += Convert.ToString(Per.Attribute("ImporteGravado").Value) + " * ";
@@ -964,7 +1001,7 @@ namespace FormPruebaXML
                             case "050":
                                 per_050_importeexento += Convert.ToString(Per.Attribute("ImporteExento").Value) + " * ";
                                 per_050_importegravado += Convert.ToString(Per.Attribute("ImporteGravado").Value) + " * ";
-                                break                              
+                                break;
                             default:
                                 per_001_importeexento = "0.00";
                                 per_001_importegravado = "0.00";
@@ -1476,54 +1513,58 @@ namespace FormPruebaXML
                         
                     }
                     //---------------------------------------------------------------------------------------------------
-                    /**************/XElement Nom_OtroPagos = Nomina.Element(nomina12.GetName("OtroPagos"));
 
-                    //--------------------------ELEMENTOS DEL NODO Nomina12:OtroPago------------------------------------
-                    //--------REVISAR SI EL NODO OTRO PAGO ESTA CORRECTAMENTE ESTRUCTURADO------------------------------
-                    foreach (XElement Per in Nom_OtroPagos.Elements("OtroPago"))
+                    if (Nomina.Element(nomina12.GetName("OtroPagos")) != null)
                     {
-                        switch (Convert.ToString(Per.Attribute("TipoOtroPago").Value))
-                        {
-                            case "001":
-                                otrpag_001_importe += Convert.ToString(Per.Attribute("Importe").Value) + " * ";
-                                break;
-                            case "002":
-                                otrpag_002_importe += Convert.ToString(Per.Attribute("Importe").Value) + " * ";
-                                break;
-                            case "003":
-                                otrpag_003_importe += Convert.ToString(Per.Attribute("Importe").Value) + " * ";
-                                break;
-                            case "004":
-                                otrpag_004_importe += Convert.ToString(Per.Attribute("Importe").Value) + " * ";
-                                break;
-                            case "005":
-                                otrpag_005_importe += Convert.ToString(Per.Attribute("Importe").Value) + " * ";
-                                break;
-                            case "999":
-                                otrpag_999_importe += Convert.ToString(Per.Attribute("Importe").Value) + " * ";
-                                break;
-                            default:
-                                otrpag_001_importe = "0.00";
-                                otrpag_001_importe = "0.00";
-                                otrpag_001_importe = "0.00";
-                                otrpag_001_importe = "0.00";
-                                otrpag_001_importe = "0.00";
-                                otrpag_001_importe = "0.00";
-                            break;
-                        }
-                    }
+                        /**************/
+                        XElement Nom_OtroPagos = Nomina.Element(nomina12.GetName("OtroPagos"));
 
+                        //--------------------------ELEMENTOS DEL NODO Nomina12:OtroPago------------------------------------
+                        //--------REVISAR SI EL NODO OTRO PAGO ESTA CORRECTAMENTE ESTRUCTURADO------------------------------
+                        foreach (XElement Per in Nom_OtroPagos.Elements("OtroPago"))
+                        {
+                            switch (Convert.ToString(Per.Attribute("TipoOtroPago").Value))
+                            {
+                                case "001":
+                                    otrpag_001_importe += Convert.ToString(Per.Attribute("Importe").Value) + " * ";
+                                    break;
+                                case "002":
+                                    otrpag_002_importe += Convert.ToString(Per.Attribute("Importe").Value) + " * ";
+                                    break;
+                                case "003":
+                                    otrpag_003_importe += Convert.ToString(Per.Attribute("Importe").Value) + " * ";
+                                    break;
+                                case "004":
+                                    otrpag_004_importe += Convert.ToString(Per.Attribute("Importe").Value) + " * ";
+                                    break;
+                                case "005":
+                                    otrpag_005_importe += Convert.ToString(Per.Attribute("Importe").Value) + " * ";
+                                    break;
+                                case "999":
+                                    otrpag_999_importe += Convert.ToString(Per.Attribute("Importe").Value) + " * ";
+                                    break;
+                                default:
+                                    otrpag_001_importe = "0.00";
+                                    otrpag_001_importe = "0.00";
+                                    otrpag_001_importe = "0.00";
+                                    otrpag_001_importe = "0.00";
+                                    otrpag_001_importe = "0.00";
+                                    otrpag_001_importe = "0.00";
+                                    break;
+                            }
+                        }
+                    }    
                             
                 }
                 else
                 {
-                    //--------------------------ELEMENTOS DEL NODO Nomina12:Nomina--------------------------------
+                //--------------------------ELEMENTOS DEL NODO Nomina12:Nomina--------------------------------
 
-                    //FECHAS NULAS = ??? (INVESTIGAR SI ES POSIBLE)
+                //FECHAS NULAS = ??? (INVESTIGAR SI ES POSIBLE)
 
-                    nom_fechIniPago = new DateTime(0,0,0);      //Pendiente
-                    nom_fechapago = new DateTime(0,0,0);
-                    nom_fechFinalPago = new DateTime(0,0,0);
+                    nom_fechIniPago = null;
+                    nom_fechapago = null;
+                    nom_fechFinalPago = null;
                     nom_numdiaspagados = "0.00";
                     nom_tiponomina = "-";
                     nom_totaldeducciones = "0.00";
@@ -1541,7 +1582,7 @@ namespace FormPruebaXML
                     rec_cuentabancaria = "-";
                     rec_curp = "-";
                     rec_departamento = "-";
-                    rec_fechaIniLaboral = new DateTime(0,0,0);
+                    rec_fechaIniLaboral = null;
                     rec_numempleado = "-";
                     rec_numSegSoc = "-";
                     rec_periodiPago = "-";
@@ -1599,7 +1640,7 @@ namespace FormPruebaXML
                 else
                 {
                     //---------------------------------ELEMENTOS DEL NODO Pago10:Pago-------------------------------------
-                    pag_fechaPago = new DateTime(0,0,0);
+                    pag_fechaPago = null;
                     pag_formaPagoP = "-";
                     pag_monedaP = "-";
                     pag_monto = "0.00";
