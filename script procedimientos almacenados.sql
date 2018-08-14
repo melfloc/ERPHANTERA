@@ -1,0 +1,24 @@
+USE ERPHONIX;
+
+CREATE PROCEDURE CONSMOVIMIENTOS (@UUID AS NVARCHAR(36), @FECHA AS DATE, @RFC AS NVARCHAR(13),@DEPOSITO AS NUMERIC(10,2), @RETIRO AS NUMERIC(10,2))
+AS
+	IF (UUID = "-")
+    BEGIN
+		SELECT MOV_CVE_MOVIMIENTO AS [Clave de movimiento],
+		MOV_UUID AS UUID,
+        MOV_SERIE AS Serie,
+        MOV_FOLIO AS Folio,
+        MOV_FECHAPAGO AS [Fecha de pago],
+        MOV_BANCO AS Banco,
+        MOV_CTABANCO AS [Cuenta bancaria],
+        MOV_DEPOSITO AS Depósito,
+        MOV_ABONO AS Abono,
+        MOV_RETIRO AS Retiro,
+        MOV_CARGO AS Cargo,
+        MOV_SALDO AS Saldo
+        FROM MOVIMIENTOBANCARIO
+        WHERE MOV_UUID = @UUID
+        AND MOV_FECHA = @FECHA
+        AND MOV_RFC = @RFC
+        AND MOV_DEPOSITO = @DEPOSITO
+        AND MOV_RETIRO = @RETIRO
