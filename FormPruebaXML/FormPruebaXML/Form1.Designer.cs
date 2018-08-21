@@ -145,7 +145,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Eras Bold ITC", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(236, 4);
+            this.label3.Location = new System.Drawing.Point(208, 2);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(339, 23);
             this.label3.TabIndex = 5;
@@ -735,7 +735,7 @@
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label1);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Registro de flujo de efectivo.";
             this.ResumeLayout(false);
             this.PerformLayout();
 
